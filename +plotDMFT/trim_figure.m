@@ -1,4 +1,4 @@
-function trimFigure(inFig)
+function trim_figure(inFig)
 % Trims the white borders of the figure when exporting to PDF
 
 if nargin < 1
