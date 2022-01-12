@@ -1,18 +1,18 @@
-function [ids,obs,U_list] = extract_line(U_LIST)
-%% Getting a list of variable values, from directories.
+function [ids,ens,U_list]  = energy_line(U_LIST)
+%% Getting a list of energy values, from directories.
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
-%  ids: a cell of strings, the QcmPlab names of the observables 
-%  obs: a cell of float-arrays, corresponding to the names above, forall U
+%  ids: a cell of strings, the QcmPlab names for the pot-energy terms 
+%  ens: a cell of float-arrays, corresponding to the names above
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     global ignUlist
-    if isempty(U_LIST) | ignUlist == true
+    if isempty(U_LIST) || ignUlist == true
        [U_LIST, ~] = get_list('U'); 
     else
        U_LIST = sort(U_LIST);
     end
     % Then we can proceed spanning all the U-values
     Nu = length(U_LIST);
-    cellobs = cell(Nu,1);
+    cellEn = cell(Nu,1);
     for iU = 1:length(U_LIST)
         U = U_LIST(iU);
         UDIR= sprintf('U=%f',U);
@@ -23,17 +23,18 @@ function [ids,obs,U_list] = extract_line(U_LIST)
            error(errstr);
         end
         cd(UDIR); 
-        [ids, cellobs{iU}] = get_observables();
+        [ids, cellEn{iU}] = get_energies();
         cd('..');
     end
     % We need some proper reshaping
-    Nobs = length(ids);
-    obs = cell(1,Nobs);
-    for jOBS = 1:Nobs
-        obs{jOBS} = zeros(Nu,1);
+    Nids = length(ids);
+    ens = cell(1,Nids);
+    for jEn = 1:Nids
+        ens{jEn} = zeros(Nu,1);
         for iU = 1:Nu
-           obs{jOBS}(iU) = cellobs{iU}(jOBS);
+           ens{jEn}(iU) = cellEn{iU}(jEn);
         end
     end
     U_list = U_LIST;
 end
+
