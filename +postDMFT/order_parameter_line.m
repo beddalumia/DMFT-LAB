@@ -23,7 +23,7 @@ function [ids,ordpms,U_list] = order_parameter_line(U_LIST)
            error(errstr);
         end
         cd(UDIR); 
-        [ids, cellordpms{iU}] = get_order_parameters();
+        [ids, cellordpms{iU}] = postDMFT.get_order_parameters();
         cd('..');
     end
     % We need some proper reshaping

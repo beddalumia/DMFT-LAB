@@ -5,7 +5,7 @@ function [kins,U_list]  = kinetic_line(U_LIST)
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     global ignUlist
     if isempty(U_LIST) || ignUlist == true
-       [U_LIST, ~] = get_list('U'); 
+       [U_LIST, ~] = postDMFT.get_list('U'); 
     else
        U_LIST = sort(U_LIST);
     end

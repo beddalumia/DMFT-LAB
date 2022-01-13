@@ -6,7 +6,7 @@ function [ids,obs,U_list] = observables_line(U_LIST)
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     global ignUlist
     if isempty(U_LIST) | ignUlist == true
-       [U_LIST, ~] = get_list('U'); 
+       [U_LIST, ~] = postDMFT.get_list('U'); 
     else
        U_LIST = sort(U_LIST);
     end
@@ -23,7 +23,7 @@ function [ids,obs,U_list] = observables_line(U_LIST)
            error(errstr);
         end
         cd(UDIR); 
-        [ids, cellobs{iU}] = get_observables();
+        [ids, cellobs{iU}] = postDMFT.get_observables();
         cd('..');
     end
     % We need some proper reshaping
