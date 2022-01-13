@@ -41,13 +41,13 @@ function interactive_line(EXE,doMPI,Uold,Umin,Ustep,Umax,varargin)
         end
         HUBBARD =sprintf(' uloc=%f',U);             % OVERRIDE of Uloc
         VAR = [];                                   % and
-        for i = 1:(length(varargin)-1)              % ALL
+        for i = 1:2:(length(varargin)-1)            % ALL
             VARname = varargin{i};                  % the
             VARsval = char(string(varargin{i+1}));  % OTHER
             VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
         end		        
-        out = ' | tee LOG_dmft.txt';
-        dmft_ed_call = [mpi,EXE,HUBBARD,VAR,out];
+        out = ' | tee LOG_dmft.txt';                % Better to print this
+        dmft_ed_call = [mpi,EXE,HUBBARD,VAR,out]    % to STDOUT...
         tic
         system(dmft_ed_call);                       % Fortran-call
         chrono = toc;

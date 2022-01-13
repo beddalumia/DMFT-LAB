@@ -54,8 +54,8 @@ function refresh_line(EXE,doMPI,Nnew,ignList)
         end
         HUBBARD =sprintf(' uloc=%f',U);             % OVERRIDE of Uloc
         NLOOP = sprintf(' nloop=%d',Nnew);          % OVERRIDE of #{loops}
-        out = ' > LOG_dmft.txt';                    % STDOUT destination
-        dmft_ed_call = [mpi,EXE,HUBBARD,NLOOP,out];
+        out = ' | tee LOG_dmft.txt';                % STDOUT destination
+        dmft_ed_call = [mpi,EXE,HUBBARD,NLOOP,out]
         tic
         system(dmft_ed_call);                       % Fortran-call
         chrono = toc;
