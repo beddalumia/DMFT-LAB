@@ -40,10 +40,10 @@ function dry_line(EXE,doMPI,Uold,Umin,Ustep,Umax,varargin)
             VARsval = char(string(varargin{i+1}));  % OTHER
             VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
         end		        
-        out = ' | tee LOG_dmft.txt';                % Better to print this
-        dmft_ed_call = [mpi,EXE,HUBBARD,VAR,out]    % to STDOUT...
+        out = ' | tee LOG_out.txt';                 % Better to print this
+        sys_call = [mpi,EXE,HUBBARD,VAR,out]        % to STDOUT...
         tic
-        system(dmft_ed_call);                       % Fortran-call
+        system(sys_call);                           % Fortran-call
         chrono = toc;
         file_id = fopen('LOG_time.txt','w');        % Write on time-log
         fprintf(file_id,'%f\n', chrono);
