@@ -3,7 +3,7 @@ function autostop_line(EXE,doMPI,Uold,Umin,Ustep,Umax,varargin)
 
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
-    %   Uold                : Restart option [Uold<Umin]
+    %   Uold                : Restart point [Uold<Umin]
     %   Umin,Ustep,Umax     : Input Hubbard interaction [Umin:Ustep:Umax]
 
     %   varargin            : Set of fixed control parameters

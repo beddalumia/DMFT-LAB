@@ -4,7 +4,7 @@ function autostep_line(EXE,doMPI,Uold,Umin,Umax,varargin)
 
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
-    %   Uold                : Restart option [Uold<Umin]
+    %   Uold                : Restart point [Uold<Umin]
     %   Umin,Umax           : Input Hubbard interaction [Umin<U<Umax]
 
     %   varargin            : Set of fixed control parameters
