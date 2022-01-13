@@ -1,32 +1,31 @@
-# RunningDMFT
+# `runDMFT`
 Running QcmPlab DMFT codes from MATLAB
 
 ----------
 
-### Choose your favorite workflow:
+### Choose your favorite workflow
 
 #### Production
 
-- `_dry.m` The most basic scenario: linear increase of U, no feedback, just some noninvasive check of convergence to flag out, _a posteriori_, which points should be discarded. 
+- `dry_line()` The most basic scenario: linear increase of U, no feedback, just some noninvasive check of convergence to flag out, _a posteriori_, which points should be discarded. 
 
-- `_autostop.m` Basic linspace in U, without any feedback mechanism. Stops when dmft does not converge (to avoid wasting cpu-time).
+- `autostop_line()` Basic linspace in U, without any adaptive feedback mechanism. Just stops the moment dmft does not converge (to avoid wasting cpu-time).
 
-- `_autostep.m` Gradually increases U by feedback-controlled steps, i.e. if dmft does not converge the point is discarded and the step reduced. Self-mixing is fixed (but you might update it manually, on the flight).
+- `autostep_line()` Gradually increases U by feedback-controlled steps, i.e. if dmft does not converge the point is discarded and the step reduced. Self-mixing is fixed (as every other control variable).
 
 
 #### Refinement
 
-- `_refresh.m` Systematically enters the folder structure of a pre-existent calculation and uses the given restart and input files to perform some additional dmft loops. Useful if something has been added to the driver.
+- `refresh_line()` Systematically enters the folder structure of a pre-existent calculation and uses the given _used_ files as a _restart_ to perform some additional dmft loops. Useful if something has been added to the driver. [WORK-IN-PROGRESS, see [Issue #1](https://github.com/bellomia/DMFT-LAB/issues/1)]
 
 #### Testing & Setup
 
-- `_livemixing.m` Interactive-ish workflow: on-the-flight manual updates of the mixing ratio, while dmft waits for you (in a dumb way); Hubbard steps are inevitably fixed.
+- `interactive_line()` Interactive-ish workflow: on-the-flight manual updates of the inputfile, while dmft waits for you (in a dumb way); Hubbard steps are inevitably fixed.
 
+----------
 
-#### Work-in-Progress & To-Do
+### TODO
 
-- [ ] `_automixing.m` Automatic controll of self-mixing. Requires inspecting evolution of the dmft error, could be cumbersome.
+- [ ] `automixing_line()` Automatic control of self-mixing. Requires inspecting evolution of the dmft error, could be cumbersome (better handled at a lower level, e.g. within the dmft-loop driver: see [`adaptive_mix()`](https://github.com/QcmPlab/SciFortran/blob/master/src/SF_OPTIMIZE/adaptive_mix.f90) in SciFortran).
 
-- [ ] `_ai.m` Automatic control of both self-mixing and Hubbard steps. Difficult for sure, maybe just not worth all the effort.
-
-- [ ] `_jobarray.m` Exploiting the array-env-variables provided by `SLURM` on HPC facilities.
+- [ ] `array_line()` A variant of `dry_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities. [**PRIORITY**]
