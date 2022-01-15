@@ -7,7 +7,7 @@ function autostep_line(EXE,doMPI,Uold,Umin,Umax,varargin)
     %   Uold                : Restart point [Uold<Umin]
     %   Umin,Umax           : Input Hubbard interaction [Umin<U<Umax]
 
-    %   varargin            : Set of fixed control parameters
+    %   varargin            : Set of fixed control parameters ['name',value]
 
     Ulist = fopen('U_list.txt','a');
 
@@ -23,51 +23,19 @@ function autostep_line(EXE,doMPI,Uold,Umin,Umax,varargin)
     U = Umin; 
     while U <= Umax
 
-        UDIR= sprintf('U=%f',U);       % Make a folder named 'U=...', where '...'
-        mkdir(UDIR);                   % is the given value for Hubbard interaction
-        cd(UDIR);                      % Enter the U-folder
+        runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 
-        oldDIR=sprintf('../U=%f',Uold);      % ------------------------------------
-        if isfolder(oldDIR)                  % If it exist a "previous" folder: 
-        restartpack = [oldDIR,'/*.restart']; % Copy all the restart files from the
-        copyfile(restartpack);               % last dmft evaluation...
-        end                                  % ------------------------------------
-
-        copyfile ../input*             % Copy inside the **external** input file
-
-        %% Run FORTRAN code (already compiled and added to PATH!) %%%%%%%%%%%%%%%%%
-        if doMPI
-            mpi = 'mpirun ';                        % Control of MPI
-        else                                        % boolean flag...
-            mpi = [];
-        end
-        HUBBARD =sprintf(' uloc=%f',U);             % OVERRIDE of Uloc
-        VAR = [];                                   % and
-        for i = 1:2:(length(varargin)-1)            % ALL
-            VARname = varargin{i};                  % the
-            VARsval = char(string(varargin{i+1}));  % OTHER
-            VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
-        end		        
-        out = ' | tee LOG_out.txt';                 % Better to print this
-        sys_call = [mpi,EXE,HUBBARD,VAR,out]        % to STDOUT...
-        tic
-        system(sys_call);                           % Fortran-call
-        chrono = toc;
-        file_id = fopen('LOG_time.txt','w');        % Write on time-log
-        fprintf(file_id,'%f\n', chrono);
-        fclose(file_id);
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
-        if isfile('ERROR.README')
+        errorfile = [sprintf('U=%f',U),'/ERROR.README'];
+        if isfile(errorfile) 
             nonconvFLG = true;
             nonconvCNT = nonconvCNT + 1;
-            movefile('ERROR.README',sprintf('../ERROR_U=%f',U));
+            movefile(errorfile,sprintf('ERROR_U=%f',U));
         else
             fprintf(Ulist,'%f\n', U);	            % Write on U-log
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-        cd ..                           % Exit the U-folder
 
         if nonconvCNT > nonconvMAX
             error('Not converged: phase-span stops now!');         
