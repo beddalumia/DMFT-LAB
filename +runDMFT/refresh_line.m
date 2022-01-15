@@ -34,16 +34,19 @@ function refresh_line(EXE,doMPI,Nnew,ignList)
             error(errstr);
         end
 
-        %% Move used.input into input [crucial: we do not know about ctrl-vars!]
-        % HOW TO DO THIS FOR A __GENERIC__ INPUTFILE <input*>
-        % -> wildcards do not work in mv...
+        %% Move used.input into input [crucial: we do not know about touched ctrl-vars]
+        usedinput  = dir([pwd, '/used.*']);
+        parts = split(usedinput.name,'.');
+        newname = cell2mat(join(parts(2:end),'.'));
+        movefile(usedinput.name,newname);
 
-        %% Move *.used into *.restart [desirable: first new loop == last old loop!]
+        %% Move *.used into *.restart [desirable: first new loop == last old loop]
         usedpack = dir([pwd, '/*.used']);
         for i = 1:numel(usedpack)
-            file = fullfile(pwd, usedpack(i).name);
-            [tempDir, tempFile] = fileparts(file); 
-            movefile(file, fullfile(tempDir, [tempFile, '.restart']));
+            file = fullfile(usedpack(i).folder, usedpack(i).name);
+            [folder, name, extension] = fileparts(file);
+            extension = '.restart';
+            movefile(file, fullfile(folder, [name, extension]));
         end
 
         %% Run FORTRAN code (already compiled and added to PATH!) %%%%%%%%%%%%%%%%%
@@ -78,3 +81,4 @@ function refresh_line(EXE,doMPI,Nnew,ignList)
     fclose(fileID_list);
 
 end
+
