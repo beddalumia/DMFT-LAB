@@ -1,9 +1,13 @@
-function [ids,obs,U_list] = observables_line(U_LIST)
+function [ids,obs,U_list] = observables_line(suffix,U_LIST)
 %% Getting a list of variable values, from directories.
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
+%  suffix: an optional charvec, handling inequivalent sites filename endings
 %  ids: a cell of strings, the QcmPlab names of the observables 
 %  obs: a cell of float-arrays, corresponding to the names above, forall U
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if(~exist('suffix','var'))
+      suffix = [];
+    end
     if ~exist('U_LIST','var') || isempty(U_LIST)
        [U_LIST, ~] = postDMFT.get_list('U'); 
     else
@@ -22,7 +26,7 @@ function [ids,obs,U_list] = observables_line(U_LIST)
            error(errstr);
         end
         cd(UDIR); 
-        [ids, cellobs{iU}] = postDMFT.get_observables();
+        [ids, cellobs{iU}] = postDMFT.get_observables(suffix);
         cd('..');
     end
     % We need some proper reshaping
