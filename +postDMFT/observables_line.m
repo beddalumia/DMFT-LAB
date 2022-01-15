@@ -37,6 +37,12 @@ function [ids,obs,U_list] = observables_line(suffix,U_LIST)
         for iU = 1:Nu
            obs{jOBS}(iU) = cellobs{iU}(jOBS);
         end
+        if(~isempty(suffix))
+            filename = [ids{jOBS},'_',suffix,'.txt'];
+        else
+            filename = [ids{jOBS},'.txt'];
+        end
+        writematrix(obs{jOBS},filename,'Delimiter','tab');
     end
     U_list = U_LIST;
 end

@@ -30,7 +30,8 @@ function [kins,U_list]  = kinetic_line(U_LIST)
         
         cd('..');
     end
-    
+    filename = 'kinetic_energy.txt';
+    writematrix(kins,filename,'Delimiter','tab');
     U_list = U_LIST;
 end
 

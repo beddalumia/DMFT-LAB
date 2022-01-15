@@ -18,7 +18,7 @@ function [names, observables] = get_observables(suffix)
     if(~isempty(suffix))
         filename = ['observables_last_',suffix,'.ed'];
     else
-        filename = 'observables_last.ed'
+        filename = 'observables_last.ed';
     end
     observables = load(filename);
 end

@@ -33,6 +33,8 @@ function [ids,ordpms,U_list] = order_parameter_line(U_LIST)
         for iU = 1:Nu
            ordpms{jORDPMS}(iU) = cellordpms{iU}(jORDPMS);
         end
+        filename = [ids{jORDPMS},'.txt'];
+        writematrix(ordpms{jORDPMS},filename,'Delimiter','tab');
     end
     U_list = U_LIST;
 end

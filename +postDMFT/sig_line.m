@@ -25,9 +25,19 @@ function [S_list,U_list] = sig_line(suffix,U_LIST)
            error(errstr);
         end
         cd(UDIR);
-        filename = ['sig_last_',suffix,'.ed'];
+        if(~isempty(suffix))
+            filename = ['sig_last_',suffix,'.ed'];
+        else
+            filename = 'sig_last.ed';
+        end
         S_list(iU) = load(filename);
         cd('..');
     end
     U_list = U_LIST;
+    if(~isempty(suffix))
+        filename = ['sig_',suffix,'.txt'];
+    else
+        filename = 'sig.txt';
+    end
+    writematrix(S_list,filename,'Delimiter','tab');
 end

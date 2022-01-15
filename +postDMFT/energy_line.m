@@ -36,6 +36,8 @@ function [ids,ens,U_list]  = energy_line(U_LIST)
         for iU = 1:Nu
            ens{jEn}(iU) = cellEn{iU}(jEn);
         end
+        filename = [ids{jEn},'.txt'];
+        writematrix(ens{jEn},filename,'Delimiter','tab');
     end
     U_list = U_LIST;
 end

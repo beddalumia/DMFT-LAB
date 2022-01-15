@@ -25,9 +25,19 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
            error(errstr);
         end
         cd(UDIR);
-        filename = ['zeta_last_',suffix,'.ed'];
+        if(~isempty(suffix))
+            filename = ['zeta_last_',suffix,'.ed'];
+        else
+            filename = 'zeta_last.ed';
+        end
         Z_list(iU) = load(filename);
         cd('..');
     end
     U_list = U_LIST;
+    if(~isempty(suffix))
+        filename = ['zeta_',suffix,'.txt'];
+    else
+        filename = 'zeta.txt';
+    end
+    writematrix(Z_list,filename,'Delimiter','tab');
 end
