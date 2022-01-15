@@ -16,11 +16,13 @@ Running QcmPlab DMFT codes from MATLAB
 
 #### Refinement
 
-- `refresh_line()` Systematically enters the folder structure of a pre-existent calculation and uses the given _used_ files as a _restart_ to perform some additional dmft loops. Useful if something has been added to the driver. [WORK-IN-PROGRESS, see [Issue #1](https://github.com/bellomia/DMFT-LAB/issues/1)]
+- `refresh_line()` Systematically enters the folder structure of a pre-existent calculation and uses the given _used_ files as a _restart_ to perform some additional dmft loops. Useful if something has been added to the driver or if you want to change something in the inputfile for just one last loop (e.g. `dm_flag`, `chi_flag`...). It has also a single-point variant, for maximum flexibility: `refresh_point()` that can be called from within a computation folder.
 
 #### Testing & Setup
 
 - `interactive_line()` Interactive-ish workflow: on-the-flight manual updates of the inputfile, while dmft waits for you (in a dumb way); Hubbard steps are inevitably fixed.
+
+- `single_point()` It runs just a single-point calculation, but it supports a `Uold` value, to handle restart-files; to be called from a blank folder (the `inputfile` should be there, `Uold=%f` folder too).
 
 ----------
 
