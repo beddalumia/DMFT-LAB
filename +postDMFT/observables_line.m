@@ -4,8 +4,7 @@ function [ids,obs,U_list] = observables_line(U_LIST)
 %  ids: a cell of strings, the QcmPlab names of the observables 
 %  obs: a cell of float-arrays, corresponding to the names above, forall U
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    global ignUlist
-    if isempty(U_LIST) | ignUlist == true
+    if ~exist('U_LIST','var') || isempty(U_LIST)
        [U_LIST, ~] = postDMFT.get_list('U'); 
     else
        U_LIST = sort(U_LIST);

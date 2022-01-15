@@ -1,10 +1,9 @@
 function [kins,U_list]  = kinetic_line(U_LIST)
 %% Getting a list of energy values, from directories.
-%  U_LIST: an array of values for Hubbard interaction U (could be empty!) 
+%  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  kins: an array of values for Kinetic energies, forall U
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    global ignUlist
-    if isempty(U_LIST) || ignUlist == true
+    if ~exist('U_LIST','var') || isempty(U_LIST)
        [U_LIST, ~] = postDMFT.get_list('U'); 
     else
        U_LIST = sort(U_LIST);

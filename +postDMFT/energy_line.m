@@ -4,8 +4,10 @@ function [ids,ens,U_list]  = energy_line(U_LIST)
 %  ids: a cell of strings, the QcmPlab names for the pot-energy terms 
 %  ens: a cell of float-arrays, corresponding to the names above
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    global ignUlist
-    if isempty(U_LIST) || ignUlist == true
+    if(~exist('suffix','var'))
+       suffix = [];
+    end
+    if ~exist('U_LIST','var') || isempty(U_LIST)
        [U_LIST, ~] = postDMFT.get_list('U'); 
     else
        U_LIST = sort(U_LIST);

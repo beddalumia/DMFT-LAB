@@ -4,11 +4,10 @@ function [ids,ordpms,U_list] = order_parameter_line(U_LIST)
 %  ids: a cell of strings, the names of the order parameters 
 %  ordpms: a cell of arrays, corresponding to the names above, for all U
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    global ignUlist
-    if isempty(U_LIST) || ignUlist == true
-       [U_LIST, ~] = get_list('U'); 
+    if ~exist('U_LIST','var') || isempty(U_LIST)
+    [U_LIST, ~] = postDMFT.get_list('U'); 
     else
-       U_LIST = sort(U_LIST);
+    U_LIST = sort(U_LIST);
     end
     % Then we can proceed spanning all the U-values
     Nu = length(U_LIST);
