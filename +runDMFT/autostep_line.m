@@ -48,7 +48,7 @@ function autostep_line(EXE,doMPI,Uold,Umin,Umax,varargin)
             Uold = U; 			        % else we update Uold and proceed to...         
         end
 
-        U = U + Ustep(notConvCount+1);  % ...Hubbard update  
+        U = U + Ustep(nonconvCNT+1);    % ...Hubbard update  
 
     end
 
