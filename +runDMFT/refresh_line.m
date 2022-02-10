@@ -42,7 +42,7 @@ function refresh_line(EXE,doMPI,Nnew,ignList,varargin)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
         if ~isfile('ERROR.README') && isempty(find(U_converged == U,1))
-            fprintf(fileID_Ulist,'%f\n', U);        % Update U-list, only
+            fprintf(fileID_list,'%f\n', U);         % Update U-list, only
         end                                         % if *newly* converged
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
