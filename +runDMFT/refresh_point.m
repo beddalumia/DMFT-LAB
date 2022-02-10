@@ -36,12 +36,12 @@ function refresh_point(EXE,doMPI,Nnew,varargin)
         VARsval = char(string(varargin{i+1}));  % OTHER
         VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
     end	
-    out = ' | tee LOG_dmft.txt';                % STDOUT destination
+    out = ' | tee -a LOG_refresh.out';          % STDOUT destination
     sys_call = [mpi,EXE,NLOOP,VAR,out]
     tic
     system(sys_call);                           % Fortran-call
     chrono = toc;
-    file_id = fopen('LOG_time.txt','w');        % Write on time-log
+    file_id = fopen('LOG_refresh.time','w');    % Write on time-log
     fprintf(file_id,'%f\n', chrono);
     fclose(file_id);
 

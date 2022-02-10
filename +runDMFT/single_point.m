@@ -38,12 +38,12 @@ function single_point(EXE,doMPI,U,Uold,varargin)
         VARsval = char(string(varargin{i+1}));  % OTHER
         VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
     end		        
-    out = ' | tee LOG_out.txt';                 % Better to print this
+    out = ' | tee LOG.out';                     % Better to print this
     sys_call = [mpi,EXE,HUBBARD,VAR,out]        % to STDOUT...
     tic
     system(sys_call);                           % Fortran-call
     chrono = toc;
-    file_id = fopen('LOG_time.txt','w');        % Write on time-log
+    file_id = fopen('LOG.time','w');            % Write on time-log
     fprintf(file_id,'%f\n', chrono);
     fclose(file_id);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
