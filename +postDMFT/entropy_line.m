@@ -42,5 +42,5 @@ function [EE_list,U_list] = entropy_line(suffix,U_LIST)
     else
         filename = 'entropy_line.txt';
     end
-    writematrix(L_list,filename,'Delimiter','tab');
+    writematrix(EE_list,filename,'Delimiter','tab');
 end
