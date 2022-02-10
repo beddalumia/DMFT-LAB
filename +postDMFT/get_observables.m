@@ -15,7 +15,7 @@ function [names, observables] = get_observables(suffix)
         head = int2str(head);               % Int to Str conversion
         names{i} = erase(tempstr,head);     % Proper beheading ;D
     end
-    if(~exist(suffix))
+    if(~exist('suffix','var'))
         suffix = [];
     end
     if(~isempty(suffix))
