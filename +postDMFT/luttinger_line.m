@@ -1,5 +1,5 @@
 function [L_list,U_list] = luttinger_line(suffix,U_LIST)
-%% Getting a list of Z-weight values, from directories.
+%% Getting a list of luttinger invariants, from directories.
 %
 %       [L_list,U_list] = postDMFT.luttinger_line(suffix,U_LIST)
 %

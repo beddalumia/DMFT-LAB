@@ -1,7 +1,7 @@
-function [EE_list,U_list] = entropy_line(suffix,U_LIST)
-%% Getting a list of Z-weight values, from directories.
+function [EE_list,U_list] = eentropy_line(suffix,U_LIST)
+%% Getting a list of entanglement entropy values, from directories.
 %
-%       [EE_list,U_list] = postDMFT.entropy_line(suffix,U_LIST)
+%       [EE_list,U_list] = postDMFT.eentropy_line(suffix,U_LIST)
 %
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  suffix: an optional charvec, handling inequivalent filename endings
@@ -38,9 +38,9 @@ function [EE_list,U_list] = entropy_line(suffix,U_LIST)
     end
     U_list = U_LIST;
     if(~isempty(suffix))
-        filename = ['entropy_line_',suffix,'.txt'];
+        filename = ['eentropy_line_',suffix,'.txt'];
     else
-        filename = 'entropy_line.txt';
+        filename = 'eentropy_line.txt';
     end
     writematrix(EE_list,filename,'Delimiter','tab');
 end
