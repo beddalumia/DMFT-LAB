@@ -1,11 +1,12 @@
 function refresh_line(EXE,doMPI,Nnew,ignList,varargin)
 %% Refreshes a pre-existent calculation by Nnew loops [whole-line]
-
+    %
+    %   runDMFT.refresh_line(EXE,doMPI,Nnew,ignList,varargin)
+    %
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
     %   Nnew                : How much loops to add in the refresh
     %   ignList             : Flag to ignore the U_list.txt file
-
     %   varargin            : Set of fixed control parameters ['name',value]
 
     %% Open file to write/update converged U-values
@@ -36,7 +37,7 @@ function refresh_line(EXE,doMPI,Nnew,ignList,varargin)
             error(errstr);
         end
 
-        runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
+        runDMFT.refresh_point(EXE,doMPI,Nnew,varargin{:});
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP

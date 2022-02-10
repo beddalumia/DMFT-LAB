@@ -1,12 +1,13 @@
-function interactive_line(EXE,doMPI,Uold,Umin,Ustep,Umax,varargin)
+function interactive_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 %% Runs an interactive U-line 
 %  if dmft does not converge the point is reiterated: time to change the inputfile!
-
+    %
+    %   runDMFT.interactive_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
+    %
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
-    %   Uold                : Restart point [Uold<Umin]
-    %   Umin,Ustep,Umax     : Input Hubbard interaction [Umin:Ustep:Umax]
-
+    %   Uold                : Restart point [NaN -> no restart]
+    %   Ustart,Ustep,Ustop  : Input Hubbard interaction [Ustart:Ustep:Ustop]
     %   varargin            : Set of fixed control parameters ['name',value]
 
     Ulist = fopen('U_list.txt','a');
@@ -17,9 +18,9 @@ function interactive_line(EXE,doMPI,Uold,Umin,Ustep,Umax,varargin)
     nonconvMAX = 5;     % Maximum #{times} we accept DMFT to fail [hard-coded...]
                         % --> Available time to modify the inputfile on the flight
 
-    U = Umin;
+    U = Ustart;
     doUpdate = true;
-    while U <= Umax
+    while U ~= Ustop+Ustep
 
         runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 

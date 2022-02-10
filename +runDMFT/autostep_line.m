@@ -1,27 +1,33 @@
-function autostep_line(EXE,doMPI,Uold,Umin,Umax,varargin)
+function autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
 %% Runs a U-line with feedback-controlled steps: 
 %  if dmft does not converge the point is discarded and the Ustep is reduced.
-
+    %
+    %   runDMFT.autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
+    %
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
-    %   Uold                : Restart point [Uold<Umin]
-    %   Umin,Umax           : Input Hubbard interaction [Umin<U<Umax]
-
+    %   Uold                : Restart point [NaN -> no restart]
+    %   Ustart,Ustop        : Input Hubbard interaction [Ustart<U<Ustop or Ustart>U>Ustop]
     %   varargin            : Set of fixed control parameters ['name',value]
 
     Ulist = fopen('U_list.txt','a');
 
     %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    
     Ustep = [.5,.25,.1,.05,.01];       % Let's keep them hard-coded...
     NUstep = length(Ustep);
+
+    % Autodetermine span direction
+    if Ustart > Ustop
+       Ustep = -Ustep;
+    end
 
     nonconvFLG = false;                % Convergence-fail *flag*
     nonconvCNT = 0;                    % Convergence-fail *counter*
     nonconvMAX = NUstep-1;             % Maximum #{times} we accept DMFT to fail
 
-    U = Umin; 
-    while U <= Umax
+    U = Ustart; 
+    while not(any(U==Ustop+Ustep))
 
         runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 

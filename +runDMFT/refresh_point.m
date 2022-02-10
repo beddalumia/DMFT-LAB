@@ -1,10 +1,11 @@
 function refresh_point(EXE,doMPI,Nnew,varargin)
 %% Refreshes a pre-existent calculation by Nnew loops [single-point]
-
+    %
+    %   runDMFT.refresh_point(EXE,doMPI,Nnew,varargin)
+    %
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
     %   Nnew                : How much loops to add in the refresh
-
     %   varargin            : Set of fixed control parameters ['name',value]
 
     %% Move used.input into input [crucial: we do not know about touched ctrl-vars]

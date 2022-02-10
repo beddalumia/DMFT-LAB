@@ -1,9 +1,12 @@
 function single_point(EXE,doMPI,U,Uold,varargin)    
 %% Runs a single-point calculation given:
+    %
+    %   runDMFT.single_point(EXE,doMPI,U,Uold,varargin)  
+    %
     %   EXE                        : Executable driver
     %   doMPI                      : Flag to activate OpenMPI
     %   U                          : Input Hubbard interaction
-    %   Uold                       : Restart point [Uold<U]
+    %   Uold                       : Restart point [NaN -> no restart]
     %   varargin                   : Set of control parameters ['name',value]
     
     UDIR=sprintf('U=%f',U);        % Make a folder named 'U=...', where '...'
@@ -11,7 +14,7 @@ function single_point(EXE,doMPI,U,Uold,varargin)
     cd(UDIR);                      % Enter the U-folder
 
     if(~exist('Uold','var'))
-        Uold = -1; % no restart
+        Uold = NaN; % no restart
     end
 
     oldDIR=sprintf('../U=%f',Uold);      % ------------------------------------

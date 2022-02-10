@@ -1,19 +1,20 @@
-function autostop_line(EXE,doMPI,Uold,Umin,Ustep,Umax,varargin)
+function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 %% Runs a U-line with the most basic feedback: it stops when dmft does not converge
-
+    %
+    %   runDMFT.autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
+    %
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
-    %   Uold                : Restart point [Uold<Umin]
-    %   Umin,Ustep,Umax     : Input Hubbard interaction [Umin:Ustep:Umax]
-
+    %   Uold                : Restart point [NaN -> no restart]
+    %   Ustart,Ustep,Ustop  : Input Hubbard interaction [Ustart:Ustep:Ustop]
     %   varargin            : Set of fixed control parameters ['name',value]
 
     Ulist = fopen('U_list.txt','a');
 
     %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    U = Umin; 
-    while U <= Umax
+    U = Ustart; 
+    while U ~= Ustop+Ustep
 
         runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 
