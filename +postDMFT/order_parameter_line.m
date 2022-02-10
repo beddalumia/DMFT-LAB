@@ -1,5 +1,8 @@
 function [ids,ordpms,U_list] = order_parameter_line(U_LIST)
 %% Getting a list of variable values, from directories.
+%
+%       [ids,ordpms,U_list] = postDMFT.order_parameter_line(U_LIST)
+%
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  ids: a cell of strings, the names of the order parameters 
 %  ordpms: a cell of arrays, corresponding to the names above, for all U

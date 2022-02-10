@@ -1,5 +1,8 @@
 function [names, order_parameters] = get_order_parameters()
 %% Getting all information from order_parameters_[].dat
+%
+%       [names, order_parameters] = postDMFT.get_order_parameters()
+%
 %  names: a cell of strings, the names of the order parameters (from [])
 %  order_parameters: an array of floats, corresponding to the names above
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

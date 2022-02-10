@@ -1,5 +1,8 @@
 function [flist, strlist] = get_list(VARNAME)
 %% Getting a list of variable values, from directories.
+%
+%       [flist, strlist] = postDMFT.get_list(VARNAME)
+%
 %  VARNAME: a string, identifying the listed variable (e.g. 'U')
 %  flist: an array of float_values (e.g. U=[:] )
 %  strlist: an array of dir_name strings (e.g. ['U=%f'] )

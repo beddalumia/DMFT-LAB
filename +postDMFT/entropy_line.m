@@ -1,11 +1,11 @@
-function [Z_list,U_list] = zeta_line(suffix,U_LIST)
+function [EE_list,U_list] = entropy_line(suffix,U_LIST)
 %% Getting a list of Z-weight values, from directories.
 %
-%       [Z_list,U_list] = postDMFT.zeta_line(suffix,U_LIST)
+%       [EE_list,U_list] = postDMFT.entropy_line(suffix,U_LIST)
 %
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  suffix: an optional charvec, handling inequivalent filename endings
-%  Z_list: a float-array, forall U, giving all the quasiparticle weight values
+%  EE_list: a float-array, forall U, giving all the entanglement entropies
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(~exist('suffix','var'))
       suffix = [];
@@ -17,7 +17,7 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
     end
     % Then we can proceed spanning all the U-values
     Nu = length(U_LIST);
-    Z_list = zeros(Nu,1);
+    EE_list = zeros(Nu,1);
     for iU = 1:length(U_LIST)
         U = U_LIST(iU);
         UDIR= sprintf('U=%f',U);
@@ -29,18 +29,18 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
         end
         cd(UDIR);
         if(~isempty(suffix))
-            filename = ['zeta_last_',suffix,'.ed'];
+            filename = ['eentropy_',suffix,'.dat'];
         else
-            filename = 'zeta_last.ed';
+            filename = 'eentropy.dat';
         end
-        Z_list(iU) = load(filename);
+        EE_list(iU) = load(filename);
         cd('..');
     end
     U_list = U_LIST;
     if(~isempty(suffix))
-        filename = ['zeta_',suffix,'.txt'];
+        filename = ['entropy_line_',suffix,'.txt'];
     else
-        filename = 'zeta.txt';
+        filename = 'entropy_line.txt';
     end
-    writematrix(Z_list,filename,'Delimiter','tab');
+    writematrix(L_list,filename,'Delimiter','tab');
 end

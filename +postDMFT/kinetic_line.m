@@ -1,5 +1,8 @@
 function [kins,U_list]  = kinetic_line(U_LIST)
 %% Getting a list of energy values, from directories.
+%
+%     [kins,U_list]  = postDMFT.kinetic_line(U_LIST)
+%
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  kins: an array of values for Kinetic energies, forall U
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,6 +37,4 @@ function [kins,U_list]  = kinetic_line(U_LIST)
     writematrix(kins,filename,'Delimiter','tab');
     U_list = U_LIST;
 end
-
-
 

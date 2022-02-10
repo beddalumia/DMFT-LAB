@@ -1,5 +1,8 @@
 function [ids,ens,U_list]  = energy_line(U_LIST)
 %% Getting a list of energy values, from directories.
+%
+%     [ids,ens,U_list]  = postDMFT.energy_line(U_LIST)
+%
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  ids: a cell of strings, the QcmPlab names for the pot-energy terms 
 %  ens: a cell of float-arrays, corresponding to the names above

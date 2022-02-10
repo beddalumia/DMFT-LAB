@@ -1,7 +1,10 @@
 function [S_list,U_list] = sig_line(suffix,U_LIST)
 %% Getting a list of scattering rate values, from directories. 
+%
+%       [S_list,U_list] = postDMFT.sig_line(suffix,U_LIST)
+%
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
-%  suffix: an optional charvec, handling inequivalent sites filename endings
+%  suffix: an optional charvec, handling inequivalent filename endings
 %  S_list: a float-array, forall U, giving all the scattering rate values
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(~exist('suffix','var'))
@@ -14,7 +17,7 @@ function [S_list,U_list] = sig_line(suffix,U_LIST)
     end
     % Then we can proceed spanning all the U-values
     Nu = length(U_LIST);
-    cellobs = cell(Nu,1);
+    S_list = zeros(Nu,1);
     for iU = 1:length(U_LIST)
         U = U_LIST(iU);
         UDIR= sprintf('U=%f',U);

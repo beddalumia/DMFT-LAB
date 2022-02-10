@@ -1,11 +1,11 @@
-function [Z_list,U_list] = zeta_line(suffix,U_LIST)
+function [L_list,U_list] = luttinger_line(suffix,U_LIST)
 %% Getting a list of Z-weight values, from directories.
 %
-%       [Z_list,U_list] = postDMFT.zeta_line(suffix,U_LIST)
+%       [L_list,U_list] = postDMFT.luttinger_line(suffix,U_LIST)
 %
 %  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  suffix: an optional charvec, handling inequivalent filename endings
-%  Z_list: a float-array, forall U, giving all the quasiparticle weight values
+%  L_list: a float-array, forall U, giving all the luttinger integral vals
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(~exist('suffix','var'))
       suffix = [];
@@ -17,7 +17,7 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
     end
     % Then we can proceed spanning all the U-values
     Nu = length(U_LIST);
-    Z_list = zeros(Nu,1);
+    L_list = zeros(Nu,1);
     for iU = 1:length(U_LIST)
         U = U_LIST(iU);
         UDIR= sprintf('U=%f',U);
@@ -29,18 +29,18 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
         end
         cd(UDIR);
         if(~isempty(suffix))
-            filename = ['zeta_last_',suffix,'.ed'];
+            filename = ['luttinger_',suffix,'.dat'];
         else
-            filename = 'zeta_last.ed';
+            filename = 'luttinger.dat';
         end
-        Z_list(iU) = load(filename);
+        L_list(iU) = load(filename);
         cd('..');
     end
     U_list = U_LIST;
     if(~isempty(suffix))
-        filename = ['zeta_',suffix,'.txt'];
+        filename = ['luttinger_line_',suffix,'.txt'];
     else
-        filename = 'zeta.txt';
+        filename = 'luttinger_line.txt';
     end
-    writematrix(Z_list,filename,'Delimiter','tab');
+    writematrix(L_list,filename,'Delimiter','tab');
 end

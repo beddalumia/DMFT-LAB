@@ -1,5 +1,8 @@
 function [names, energies] = get_energies()
 %% Getting all information from energy_last.ed and energy_info.ed
+%
+%       [names, energies] = postDMFT.get_energies()
+%
 %  names: a cell of strings, the QcmPlab names for the pot-energy terms
 %  energies: an array of float values, corresponding to the names above
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
