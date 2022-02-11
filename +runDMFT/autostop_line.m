@@ -14,7 +14,8 @@ function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
     %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     U = Ustart; 
-    while U ~= Ustop+Ustep
+    while abs(U-Ustop) > abs(Ustep)/2
+    %                  ≥ 0 would sometimes give precision problems
 
         runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 

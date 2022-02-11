@@ -20,7 +20,8 @@ function interactive_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 
     U = Ustart;
     doUpdate = true;
-    while U ~= Ustop+Ustep
+    while abs(U-Ustop) > abs(Ustep)/2
+    %                  ≥ 0 would sometimes give precision problems
 
         runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 

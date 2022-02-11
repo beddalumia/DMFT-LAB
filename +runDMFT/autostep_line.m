@@ -27,7 +27,8 @@ function autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
     nonconvMAX = NUstep-1;             % Maximum #{times} we accept DMFT to fail
 
     U = Ustart; 
-    while not(any(U==Ustop+Ustep))
+    while abs(U-Ustop) > min(abs(Ustep)/2)
+    %                  ≥ 0 would sometimes give precision problems
 
         runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 
