@@ -9,12 +9,17 @@ function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
     %   Ustart,Ustep,Ustop  : Input Hubbard interaction [Ustart:Ustep:Ustop]
     %   varargin            : Set of fixed control parameters ['name',value]
 
+    if sign(Ustop-Ustart) ~= sign(Ustep)
+       Ustep = -Ustep;
+       warning('Changed sign to Ustep to avoid infinite loops!');
+    end
+
     Ulist = fopen('U_list.txt','a');
 
     %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     U = Ustart; 
-    while abs(U-Ustop) > abs(Ustep)/2
+    while abs(U-Ustep-Ustop) > abs(Ustep)/2
     %                  ≥ 0 would sometimes give precision problems
 
         runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
