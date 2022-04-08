@@ -7,14 +7,6 @@ function [names, observables] = get_observables(suffix)
 %  observables: an array of float values, corresponding to the names above
 %  suffix: an charvec string, handling inequivalent filename endings
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    names = readcell('observables_info.ed','FileType','fixedwidth');
-    names(strcmp(names,'#'))=[];
-    for i = 1:length(names)
-        tempstr = names{i};                 % Temporary string variable
-        head = sscanf(tempstr,'%d');        % Extracts the initial integer
-        head = int2str(head);               % Int to Str conversion
-        names{i} = erase(tempstr,head);     % Proper beheading ;D
-    end
     if(~exist('suffix','var'))
         suffix = [];
     end
@@ -24,6 +16,25 @@ function [names, observables] = get_observables(suffix)
         filename = 'observables_last.ed';
     end
     observables = load(filename);
+    try % MATLAB >= R2019a
+        names = readcell('observables_info.ed','FileType','fixedwidth');
+        names(strcmp(names,'#'))=[];
+        for i = 1:length(names)
+            tempstr = names{i};                 % Temporary string variable
+            head = sscanf(tempstr,'%d');        % Extracts the initial integer
+            head = int2str(head);               % Int to Str conversion
+            names{i} = erase(tempstr,head);     % Proper beheading ;D
+        end
+    catch 
+        names = cell(length(observables),1);
+        for i=1:length(observables)
+            names{i} = sprintf('observable#%d',i);
+        end
+        warning('Could not read observables_info.ed, you might want to look at it yourself.')
+    end
 end
+
+
+
 
 
