@@ -10,7 +10,12 @@ function [flist, strlist] = get_list(VARNAME)
     subthings = dir('.'); % Retrieves every subdir and file inside pwd
     subfolders = subthings([subthings(:).isdir]); % Keeps only subfolders
     subfolders = subfolders(~ismember({subfolders(:).name},{'.','..'}));
-    N = length(subfolders); flist = zeros(N,1); strlist = strings(N,1);
+    N = length(subfolders); flist = zeros(N,1); 
+    try
+        strlist = strings(N,1);
+    catch % GNU Octave
+        strlist = zeros(N,1);
+    end
     for i = 1:N
         DIR = subfolders(i).name; % Let's get the indexed string...
         flist(i) = sscanf(DIR, [VARNAME,'=%f']); %...and extract the value!

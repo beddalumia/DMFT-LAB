@@ -20,10 +20,10 @@ function single_point(EXE,doMPI,U,Uold,varargin)
     oldDIR=sprintf('../U=%f',Uold);      % ------------------------------------
     if isfolder(oldDIR)                  % If it exist a "previous" folder: 
     restartpack = [oldDIR,'/*.restart']; % Copy all the restart files from the
-    copyfile(restartpack);               % last dmft evaluation...
+    copyfile(restartpack,'./');          % last dmft evaluation...
     end                                  % ------------------------------------
 
-    copyfile ../input*             % Copy inside the **external** input file
+    copyfile('../input*','./');          % Copy inside the **external** input file
 
     %% Run FORTRAN code (already compiled and added to PATH!) %%%%%%%%%%%%%%%%%
     if doMPI
