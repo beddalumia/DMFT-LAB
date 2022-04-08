@@ -14,7 +14,7 @@ function [flist, strlist] = get_list(VARNAME)
     try
         strlist = strings(N,1);
     catch % GNU Octave
-        strlist = zeros(N,1);
+        strlist = cell(N,1);
     end
     for i = 1:N
         DIR = subfolders(i).name; % Let's get the indexed string...
