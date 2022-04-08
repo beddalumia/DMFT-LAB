@@ -42,5 +42,5 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
     else
         filename = 'zeta.txt';
     end
-    writematrix(Z_list,filename,'Delimiter','tab');
+    postDMFT.writematrix(Z_list,filename,'Delimiter','tab');
 end

@@ -42,5 +42,5 @@ function [L_list,U_list] = luttinger_line(suffix,U_LIST)
     else
         filename = 'luttinger_line.txt';
     end
-    writematrix(L_list,filename,'Delimiter','tab');
+    postDMFT.writematrix(L_list,filename,'Delimiter','tab');
 end

@@ -42,5 +42,5 @@ function [EE_list,U_list] = eentropy_line(suffix,U_LIST)
     else
         filename = 'eentropy_line.txt';
     end
-    writematrix(EE_list,filename,'Delimiter','tab');
+    postDMFT.writematrix(EE_list,filename,'Delimiter','tab');
 end

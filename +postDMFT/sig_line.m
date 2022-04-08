@@ -42,5 +42,5 @@ function [S_list,U_list] = sig_line(suffix,U_LIST)
     else
         filename = 'sig.txt';
     end
-    writematrix(S_list,filename,'Delimiter','tab');
+    postDMFT.writematrix(S_list,filename,'Delimiter','tab');
 end

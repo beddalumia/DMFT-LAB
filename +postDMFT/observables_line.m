@@ -45,7 +45,7 @@ function [ids,obs,U_list] = observables_line(suffix,U_LIST)
         else
             filename = [ids{jOBS},'.txt'];
         end
-        writematrix(obs{jOBS},filename,'Delimiter','tab');
+        postDMFT.writematrix(obs{jOBS},filename,'Delimiter','tab');
     end
     U_list = U_LIST;
 end
