@@ -36,18 +36,20 @@ function spectral_gif(filename,style,dt,ulist,varargin)
 
         % Pick and plot the requested filename
         frame = plotDMFT.spectral_frame(filename,style,varargin{:});
+        
+        % Adjust title to highlight U value
+        title(UDIR);
 
         % Exit directory
         cd('..');
 
         % Push frame to gif file
-        plotDMFT.push_frame([filename,'.gif'],iU,Nu,dt,frame); close(frame);
+        [~,body,~] = fileparts(filename);
+        plotDMFT.push_frame([body,'.gif'],iU,Nu,dt,frame); close(frame);
 
     end
     
     fprintf('...GIFs have been built.\n\n');
 
 end 
-    
-    
-    
+     

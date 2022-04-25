@@ -24,14 +24,15 @@ function fig = spectral_frame(filename,style,varargin)
     cplot(z,rF,style,varargin{:}); hold on
     cplot(z,iF,style,varargin{:});
 
-    % Title, Legend, Labels
-    title(filename,'Interpreter','none');
+    % Legend, Labels
     legend('Real part','Imaginary part');
     if      any(strfind(filename,'realw'))
                 xlabel('$\omega$','Interpreter','latex');
     elseif  any(strfind(filename,'iw'))
                 xlabel('$i\omega$','Interpreter','latex');
     end
+    [~,body,~] = fileparts(filename);
+    ylabel(body,'Interpreter','none');
 
     % Limits
     xlim([z(1),z(end)]);
