@@ -10,7 +10,7 @@ function refresh_point(EXE,doMPI,Nnew,varargin)
 
     %% Move used.input into input [crucial: we do not know about touched ctrl-vars]
     usedinput  = dir([pwd, '/used.*']);
-    parts = split(usedinput.name,'.');
+    parts = strsplit(usedinput.name,'.');
     newname = cell2mat(join(parts(2:end),'.'));
     movefile(usedinput.name,newname);
 

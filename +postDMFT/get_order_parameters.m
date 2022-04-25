@@ -16,7 +16,7 @@ function [names, order_parameters] = get_order_parameters()
            full_name = temp_name;
         end
     end
-    beheaded = erase(full_name,pattern); % Removes 'order_parameter_'
+    beheaded = erase(full_name,pattern); % Removes 'order_parameters_'
     detailed = erase(beheaded,'.dat');   % Removes '.dat'
     names = strsplit(detailed,'_');      % Reads the names separated by '_'
     order_parameters = load(full_name);
