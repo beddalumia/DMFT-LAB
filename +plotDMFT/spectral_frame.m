@@ -1,4 +1,4 @@
-function fig = spectral_frame(filename,style,varargin)
+function spectral_frame(filename,style,varargin)
 %% SPECTRAL_GIF: Builds a GIF for the line-evolution of the spectral functions
 %
 %   >> plotDMFT.spectral_frame(filename,style,varargin)
@@ -15,9 +15,6 @@ function fig = spectral_frame(filename,style,varargin)
     z  = F(:,1);
     rF = F(:,3);
     iF = F(:,2);
-
-    % Init figure
-    fig = figure("Name",filename);
 
     % Plot both real and imag parts of F
     if ~exist('style','var'); style = 'area'; end

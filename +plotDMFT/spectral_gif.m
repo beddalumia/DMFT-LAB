@@ -35,7 +35,7 @@ function spectral_gif(filename,style,dt,ulist,varargin)
         cd(UDIR); 
 
         % Pick and plot the requested filename
-        frame = plotDMFT.spectral_frame(filename,style,varargin{:});
+        plotDMFT.spectral_frame(filename,style,varargin{:});
         
         % Adjust title to highlight U value
         title(UDIR);
@@ -45,7 +45,7 @@ function spectral_gif(filename,style,dt,ulist,varargin)
 
         % Push frame to gif file
         [~,body,~] = fileparts(filename);
-        plotDMFT.push_frame([body,'.gif'],iU,Nu,dt,frame); close(frame);
+        plotDMFT.push_frame([body,'.gif'],iU,Nu,dt); close(gcf);
 
     end
     
