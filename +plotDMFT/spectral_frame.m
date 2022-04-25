@@ -1,5 +1,5 @@
 function spectral_frame(filename,style,varargin)
-%% SPECTRAL_GIF: Builds a GIF for the line-evolution of the spectral functions
+%% SPECTRAL_FRAME: Nicely plots a QcmPlab generated spectral tensor
 %
 %   >> plotDMFT.spectral_frame(filename,style,varargin)
 %
@@ -8,21 +8,16 @@ function spectral_frame(filename,style,varargin)
 %  varargin : additional options passed to internal 1d-plotter (e.g. 'FaceColor', etc...)
 %  ------------------------------------------------------------------------
 
-    % Load complex function of real/imag frequency z
-    F = load(filename);
-
-    % Assign domain, real and imag part according to QcmPlab convention
-    z  = F(:,1);
-    rF = F(:,3);
-    iF = F(:,2);
+    % Load complex function of real/imag frequency z, according to QcmPlab conventions
+    F = plotDMFT.spectral_load(filename); % F.zeta, F.real, F.imag
 
     % Plot both real and imag parts of F
     if ~exist('style','var'); style = 'area'; end
-    cplot(z,rF,style,varargin{:}); hold on
-    cplot(z,iF,style,varargin{:});
+    cplot(F.zeta,F.real,style,varargin{:}); hold on
+    cplot(F.zeta,F.imag,style,varargin{:});
 
     % Legend, Labels
-    legend('Real part','Imaginary part');
+    legend('real','imag');
     if      any(strfind(filename,'realw'))
                 xlabel('$\omega$','Interpreter','latex');
     elseif  any(strfind(filename,'iw'))
@@ -32,9 +27,9 @@ function spectral_frame(filename,style,varargin)
     ylabel(body,'Interpreter','none');
 
     % Limits
-    xlim([z(1),z(end)]);
+    xlim([F.zeta(1),F.zeta(end)]);
     try % To deal with self-energies
-    ylim([min(min(rF),min(iF)),max(max(rF),max(iF))]);
+    ylim([min(min(F.real),min(F.imag)),max(max(F.real),max(F.imag))]);
     catch
     ylim([-1,1]);
     end

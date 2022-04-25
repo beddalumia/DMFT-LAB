@@ -49,7 +49,7 @@ function spectral_gif(filename,style,dt,ulist,varargin)
 
     end
     
-    fprintf('...GIFs have been built.\n\n');
+    fprintf('...GIF has been built.\n\n');
 
 end 
      
