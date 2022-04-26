@@ -21,7 +21,7 @@ function spectral_stack(filename,dx,dy,ulist,varargin)
     fprintf('Start stacking spectra...\n\n');
 
     import plotDMFT.color.*
-    colorlist = brewer.map(Nu,'-RdBu');
+    colorlist = cubehelix.map;
 
     for iU = 1:Nu
 
