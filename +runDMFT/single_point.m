@@ -1,7 +1,7 @@
-function single_point(EXE,doMPI,U,Uold,varargin)    
+function unconverged = single_point(EXE,doMPI,U,Uold,varargin)    
 %% Runs a single-point calculation given:
     %
-    %   runDMFT.single_point(EXE,doMPI,U,Uold,varargin)  
+    %   unconverged = runDMFT.single_point(EXE,doMPI,U,Uold,varargin)  
     %
     %   EXE                        : Executable driver
     %   doMPI                      : Flag to activate OpenMPI
@@ -46,6 +46,13 @@ function single_point(EXE,doMPI,U,Uold,varargin)
     file_id = fopen('LOG.time','w');            % Write on time-log
     fprintf(file_id,'%f\n', chrono);
     fclose(file_id);
+
+    %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP %%%%%%%%%%%%%%%%%%%%%%%%%
+    errorfile = 'ERROR.README';
+    unconverged = isfile(errorfile);
+    if(unconverged)
+       fprintf(2,['\n< ',sys_call,' > point has not converged!\n\n']); beep;
+    end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     cd ..                           % Exit the U-folder

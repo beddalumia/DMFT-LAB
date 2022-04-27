@@ -37,11 +37,11 @@ function refresh_line(EXE,doMPI,Nnew,ignList,varargin)
             error(errstr);
         end
 
-        runDMFT.refresh_point(EXE,doMPI,Nnew,varargin{:});
+        unconverged = runDMFT.refresh_point(EXE,doMPI,Nnew,varargin{:});
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
-        if ~isfile('ERROR.README') && isempty(find(U_converged == U,1))
+        if not(unconverged) && isempty(find(U_converged == U,1))
             fprintf(fileID_list,'%f\n', U);         % Update U-list, only
         end                                         % if *newly* converged
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,7 +55,6 @@ function refresh_line(EXE,doMPI,Nnew,ignList,varargin)
     fclose(fileID_list);
 
 end
-
 
 
 

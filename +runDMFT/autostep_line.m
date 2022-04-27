@@ -30,12 +30,11 @@ function autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
     while abs(U-Ustep-Ustop) > min(abs(Ustep)/2)
     %                  ≥ 0 would sometimes give precision problems
 
-        runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
+        unconverged = runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
-        errorfile = [sprintf('U=%f',U),'/ERROR.README'];
-        if isfile(errorfile) 
+        if (unconverged) 
             nonconvFLG = true;
             nonconvCNT = nonconvCNT + 1;
             movefile(errorfile,sprintf('ERROR_U=%f',U));
@@ -64,6 +63,7 @@ function autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
     fclose(Ulist);
 
 end
+
 
 
 

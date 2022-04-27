@@ -1,7 +1,7 @@
-function refresh_point(EXE,doMPI,Nnew,varargin)
+function unconverged = refresh_point(EXE,doMPI,Nnew,varargin)
 %% Refreshes a pre-existent calculation by Nnew loops [single-point]
     %
-    %   runDMFT.refresh_point(EXE,doMPI,Nnew,varargin)
+    %   unconverged = runDMFT.refresh_point(EXE,doMPI,Nnew,varargin)
     %
     %   EXE                 : Executable driver
     %   doMPI               : Flag to activate OpenMPI
@@ -44,6 +44,14 @@ function refresh_point(EXE,doMPI,Nnew,varargin)
     file_id = fopen('LOG_refresh.time','w');    % Write on time-log
     fprintf(file_id,'%f\n', chrono);
     fclose(file_id);
+
+    %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP %%%%%%%%%%%%%%%%%%%%%%%%%
+    errorfile = 'ERROR.README';
+    unconverged = isfile(errorfile);
+    if(unconverged)
+       fprintf(2,['\n< ',sys_call,' > point has not converged!\n\n']); beep;
+    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 end
 

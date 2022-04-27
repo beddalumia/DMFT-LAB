@@ -22,12 +22,11 @@ function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
     while abs(U-Ustep-Ustop) > abs(Ustep)/2
     %                  ≥ 0 would sometimes give precision problems
 
-        runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
+        unconverged = runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
-        errorfile = [sprintf('U=%f',U),'/ERROR.README'];
-        if isfile(errorfile)
+        if (unconverged)
             fclose(Ulist);	         % U-list stops here
             error('Not converged: phase-span stops now!')
         end
@@ -45,7 +44,6 @@ function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
     fclose(Ulist);
 
 end
-
 
 
 
