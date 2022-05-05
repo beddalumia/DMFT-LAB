@@ -7,8 +7,8 @@ function [flist, strlist] = get_list(VARNAME)
 %  flist: an array of float_values (e.g. U=[:] )
 %  strlist: an array of dir_name strings (e.g. ['U=%f'] )
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    subthings = dir('.'); % Retrieves every subdir and file inside pwd
-    subfolders = subthings([subthings(:).isdir]); % Keeps only subfolders
+    subentries = dir('.'); % Retrieves every folder and file inside current
+    subfolders = subentries([subentries(:).isdir]); % Keeps only subfolders
     subfolders = subfolders(~ismember({subfolders(:).name},{'.','..'}));
     N = length(subfolders); flist = zeros(N,1); 
     try
