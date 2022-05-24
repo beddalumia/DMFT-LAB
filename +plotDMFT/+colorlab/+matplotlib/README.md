@@ -64,6 +64,15 @@ Note that the package delivers only a subset of all matplotlib's colorscheme, na
 ```
 ![tab20](assets/tab20.svg)
 
+### How to make a scheme permanent: `preset_colormap()` function ###
+
+PRESET_COLORMAP is a wrapper for any colormap function, storing the function and any parameter values for future calls.
+
+```matlab
+    preset_colormap(@matplotlib.magma)
+    colormap(preset_colormap)
+```
+
 ### COPYRIGHT & LICENSING ###
 © 2022, Stephen Cobeldick    
 All rights reserved.

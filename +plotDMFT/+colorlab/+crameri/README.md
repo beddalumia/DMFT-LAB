@@ -1,35 +1,15 @@
-BREWER Colormap Package
-=======================
+CRAMERI Colormap Package
+========================
 
-BREWER provides _all_ ColorBrewer[^1] discrete schemes, with simple selection by colormap length and scheme name. Alternatively the scheme name can be preselected, after which only the colormap length is required to define an output colormap. Remarkably, **downsampling or interpolation or repetition of the nodes occurs automatically**, making the schemes easily adapted to continuos-colormap use cases. Interpolation happens in the CIELAB colorspace.
 
-⚠️ While the original [BrewerMap function](https://github.com/DrosteEffect/BrewerMap) is compatible with all MATLAB functions that require a colormap function, even those in Toolboxes, the packaging has broken some corner cases, due to MATLAB's idiosyncrasies with namespace qualification. For instance this syntax would **not** do the job for the infaust Mapping Toolbox function CONTOURCMAP:
-```matlab
-    contourcmap('brewer.cmap') % DOES NOT WORK
-``` 
-> In the examples section we provide a nasty workaround, but unexpected behavior could happen if tinkering with the details. Hope to find a general solution soon.
 
 ## Overview: colorschemes and main functionalities ##
 
-![Brewer_TABLE](assets/brewer_show.svg)
+![Brewer_TABLE](assets/crameri_show.png)
 
-The BREWER package:
-* Consists of just three convenient .m files (no .mat files or other clutter).
-* Has no third-party file dependencies.
-* Has no special toolbox dependencies.
-* Interpolates in the CIELAB colorspace.
-* Requires just the standard ColorBrewer colorscheme name to select the colorscheme.
-* Accepts the colorscheme name as a string scalar or a character vector.
-* Supports all ColorBrewer colorschemes.
-* Outputs a MATLAB standard N-by-3 numeric RGB array.
-* Uses a default length the same as MATLAB's colormap functions.
-* ~~Is compatible with all MATLAB toolboxes that use colormaps.~~ **[BROKEN: nasty tricks are needed]**
-* Includes the option to reverse the color sequence: just put a `-` in front of the desired colorscheme name (see examples).
-* Does not break ColorBrewer's Apache license conditions (unlike many on MATLAB File Exchange).
+The above table, showing all the discrete schemes defined in the package, can be retrieved at run time by invoking the `crameri.show` command.
 
-The above table, showing all the discrete schemes defined in the package, can be retrieved at run time by invoking the `brewer.show` command.
-
-### Examples: command line usage through `brewer.cmap()` function ###
+### Examples: command line usage through `crameri.cmap()` function ###
 
 ```matlab
     % Brewer colors for a sample PHOTO:
@@ -112,26 +92,16 @@ The above table, showing all the discrete schemes defined in the package, can be
 ```
 ![Accent](assets/accent.svg)
 
-### Bonus: interactive usage through `brewer.show()` and `brewer.gui()` ###
+### Upgrading: retrieve any release on ZENODO with `crameri.update()` ###
 
-BREWER SHOW creates a static figure which shows the nodes (defining colors) of all ColorBrewer colorschemes, so that you could check any time the colorcodes and pick what most inspires you.
 
-BREWER GUI creates an interactive figure that allows dynamic selection of the colorscheme, while displaying the colorbars for both the colormap and its grayscale equivalent.
-
-> R2014b or later: BREWER VIEW can also update other axes' or figures' colormaps in real time, for example:
-
-```matlab
-    S = load('spine');
-    image(S.X)
-    brewer.gui(gca)
-```
 
 ### How to make a scheme permanent: `preset_colormap()` function ###
 
 PRESET_COLORMAP is a wrapper for any colormap function, storing the function and any parameter values for future calls.
 
 ```matlab
-    preset_colormap(@brewer.cmap, "blues")
+    preset_colormap(@crameri.cmap, "berlin")
     colormap(preset_colormap)
 ```
 
