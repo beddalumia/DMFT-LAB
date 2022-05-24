@@ -1,0 +1,3 @@
+[submodule "lib/colorlab"]
+	path = lib/colorlab
+	url = https://github.com/bellomia/colorlab.git

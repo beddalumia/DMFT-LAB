@@ -20,8 +20,8 @@ function spectral_stack(filename,dx,dy,ulist,varargin)
 
     fprintf('Start stacking spectra...\n\n');
 
-    import plotDMFT.colorlab.*
-    colorlist = cubehelix.map;
+    plotDMFT.colorlab_importall();
+    colorlist = palette.cubehelix;
 
     for iU = 1:Nu
 
