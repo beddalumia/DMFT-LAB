@@ -18,7 +18,7 @@ function unconverged = refresh_point(EXE,doMPI,Nnew,varargin)
     usedpack = dir([pwd, '/*.used']);
     for i = 1:numel(usedpack)
         file = fullfile(usedpack(i).folder, usedpack(i).name);
-        [folder, name, extension] = fileparts(file);
+        [folder, name, extension] = fileparts(file); %#ok (mlint suppression)
         extension = '.restart';
         movefile(file, fullfile(folder, [name, extension]));
     end
@@ -37,7 +37,7 @@ function unconverged = refresh_point(EXE,doMPI,Nnew,varargin)
         VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
     end	
     out = ' | tee -a LOG_refresh.out';          % STDOUT destination
-    sys_call = [mpi,EXE,NLOOP,VAR,out]
+    sys_call = [mpi,EXE,NLOOP,VAR,out]          %#ok (we want to print)
     tic
     system(sys_call);                           % Fortran-call
     chrono = toc;

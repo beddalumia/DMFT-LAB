@@ -15,6 +15,7 @@ function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
     end
 
     Ulist = fopen('U_list.txt','a');
+    Uconv = fopen('U_conv.txt','a');
 
     %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -27,12 +28,14 @@ function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
         if (unconverged)
-            fclose(Ulist);	         % U-list stops here
+            fprintf(Uconv,'%f\n',NaN); 
+            fclose(Ulist); % U-list stops here
             error('Not converged: phase-span stops now!')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-        fprintf(Ulist,'%f\n', U);    % Write on U-log
+        fprintf(Uconv,'%f\n', U);    % Write on U-conv
+        fprintf(Ulist,'%f\n', U);    % Write on U-list
 
         Uold = U;
         U = U + Ustep;               % Hubbard update  
@@ -41,7 +44,7 @@ function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    fclose(Ulist);
+    fclose(Ulist); fclose(Uconv);
 
 end
 

@@ -16,6 +16,7 @@ function interactive_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
     end
 
     Ulist = fopen('U_list.txt','a');
+    Uconv = fopen('U_conv.txt','a');
 
     %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -34,9 +35,12 @@ function interactive_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
         if (unconverged)
             nonconvCNT = nonconvCNT + 1;
+            errorfile = [sprintf('U=%f',U),'/ERROR.README'];
             movefile(errorfile,'ERROR.README');
+            fprintf(Ulist,'%f\n', NaN);             % Write on U-list
         else
-            fprintf(Ulist,'%f\n', U);	            % Write on U-log
+            fprintf(Ulist,'%f\n', U);	            % Write on U-list
+            fprintf(Uconv,'%f\n', U);	            % Write on U-conv
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -59,7 +63,7 @@ function interactive_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    fclose(Ulist);
+    fclose(Ulist); fclose(Uconv);
 
 end
 

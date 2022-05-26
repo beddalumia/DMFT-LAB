@@ -15,6 +15,7 @@ function dry_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
     end
 
     Ulist = fopen('U_list.txt','a');
+    Uconv = fopen('U_conv.txt','a');
 
     %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -26,8 +27,11 @@ function dry_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
-        if not(unconverged)
-           fprintf(Ulist,'%f\n', U);   % Update U-list (only if converged)
+        if unconverged
+           fprintf(Ulist,'%f\n', NaN); % Update Ulist with a null value
+        else
+           fprintf(Ulist,'%f\n', U);   % Update Ulist with actual value
+           fprintf(Uconv,'%f\n', U);   % Update Uconv only if converged
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -38,7 +42,7 @@ function dry_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    fclose(Ulist);
+    fclose(Ulist); flose(Uconv);
 
 end
 

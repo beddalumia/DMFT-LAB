@@ -39,7 +39,7 @@ function unconverged = single_point(EXE,doMPI,U,Uold,varargin)
         VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
     end		        
     out = ' | tee LOG.out';                     % Better to print this
-    sys_call = [mpi,EXE,HUBBARD,VAR,out]        % to STDOUT...
+    sys_call = [mpi,EXE,HUBBARD,VAR,out]%#ok    % to STDOUT...
     tic
     system(sys_call);                           % Fortran-call
     chrono = toc;
