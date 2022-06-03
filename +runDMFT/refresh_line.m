@@ -36,7 +36,7 @@ function refresh_line(EXE,doMPI,Nnew,ignConv,varargin)
         if isfolder(UDIR)
             cd(UDIR);                  % Enter the U-folder (if it exists)
         else
-            errstr = 'U_list file appears to be inconsistent: ';
+            errstr = 'U_list appears to be inconsistent: ';
             errstr = [errstr,UDIR];
             errstr = [errstr,' folder has not been found.'];
             error(errstr);

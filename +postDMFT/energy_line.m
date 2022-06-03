@@ -3,9 +3,9 @@ function [ids,ens,U_list]  = energy_line(U_LIST)
 %
 %     [ids,ens,U_list]  = postDMFT.energy_line(U_LIST)
 %
-%  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  ids: a cell of strings, the QcmPlab names for the pot-energy terms 
 %  ens: a cell of float-arrays, corresponding to the names above
+%  U_LIST: an optional array of values of Hubbard interaction: where to search
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(~exist('suffix','var'))
        suffix = [];
@@ -22,7 +22,7 @@ function [ids,ens,U_list]  = energy_line(U_LIST)
         U = U_LIST(iU);
         UDIR= sprintf('U=%f',U);
         if ~isfolder(UDIR)
-           errstr = 'U_list file appears to be inconsistent: ';
+           errstr = 'U_list appears to be inconsistent: ';
            errstr = [errstr,UDIR];
            errstr = [errstr,' folder has not been found.'];
            error(errstr);

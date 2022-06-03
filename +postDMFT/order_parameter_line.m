@@ -1,11 +1,11 @@
 function [ids,ordpms,U_list] = order_parameter_line(U_LIST)
-%% Getting a list of variable values, from directories.
+%% Getting a list of order parameter values, from directories.
 %
 %       [ids,ordpms,U_list] = postDMFT.order_parameter_line(U_LIST)
 %
-%  U_LIST: an array of values for Hubbard interaction U (could be empty!)
 %  ids: a cell of strings, the names of the order parameters 
 %  ordpms: a cell of arrays, corresponding to the names above, for all U
+%  U_LIST: an optional array of values of Hubbard interaction: where to search
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if ~exist('U_LIST','var') || isempty(U_LIST)
     [U_LIST, ~] = postDMFT.get_list('U'); 
@@ -19,7 +19,7 @@ function [ids,ordpms,U_list] = order_parameter_line(U_LIST)
         U = U_LIST(iU);
         UDIR= sprintf('U=%f',U);
         if ~isfolder(UDIR)
-           errstr = 'U_list file appears to be inconsistent: ';
+           errstr = 'U_list appears to be inconsistent: ';
            errstr = [errstr,UDIR];
            errstr = [errstr,' folder has not been found.'];
            error(errstr);

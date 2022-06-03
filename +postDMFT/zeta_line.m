@@ -3,9 +3,9 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
 %
 %       [Z_list,U_list] = postDMFT.zeta_line(suffix,U_LIST)
 %
-%  U_LIST: an array of values for Hubbard interaction U (could be empty!)
-%  suffix: an optional charvec, handling inequivalent filename endings
 %  Z_list: a float-array, forall U, giving all the quasiparticle weight values
+%  suffix: an optional charvec, handling inequivalent filename endings
+%  U_LIST: an optional array of values of Hubbard interaction: where to search
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(~exist('suffix','var'))
       suffix = [];
@@ -22,7 +22,7 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
         U = U_LIST(iU);
         UDIR= sprintf('U=%f',U);
         if ~isfolder(UDIR)
-           errstr = 'U_list file appears to be inconsistent: ';
+           errstr = 'U_list appears to be inconsistent: ';
            errstr = [errstr,UDIR];
            errstr = [errstr,' folder has not been found.'];
            error(errstr);

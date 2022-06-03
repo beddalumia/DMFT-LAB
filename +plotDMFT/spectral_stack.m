@@ -29,7 +29,7 @@ function spectral_stack(filename,dx,dy,ulist,varargin)
         U = ulist(iU);
         UDIR = sprintf('U=%f',U);
         if ~isfolder(UDIR)
-            errstr = 'U_list file appears to be inconsistent: ';
+            errstr = 'U_list appears to be inconsistent: ';
             errstr = [errstr,UDIR];
             errstr = [errstr,' folder has not been found.'];
             error(errstr);
