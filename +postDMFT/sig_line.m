@@ -33,7 +33,11 @@ function [S_list,U_list] = sig_line(suffix,U_LIST)
         else
             filename = 'sig_last.ed';
         end
-        S_list(iU) = load(filename);
+        if not(isfile(filename))
+            S_list(iU) = NaN;
+        else
+            S_list(iU) = load(filename);
+        end
         cd('..');
     end
     U_list = U_LIST;

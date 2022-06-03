@@ -33,7 +33,11 @@ function [EE_list,U_list] = eentropy_line(suffix,U_LIST)
         else
             filename = 'eentropy.dat';
         end
-        EE_list(iU) = load(filename);
+        if not(isfile(filename))
+            EE_list(iU) = NaN;
+        else
+            EE_list(iU) = load(filename);
+        end
         cd('..');
     end
     U_list = U_LIST;

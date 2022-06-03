@@ -33,7 +33,11 @@ function [Z_list,U_list] = zeta_line(suffix,U_LIST)
         else
             filename = 'zeta_last.ed';
         end
-        Z_list(iU) = load(filename);
+        if not(isfile(filename))
+            Z_list(iU) = NaN;
+        else
+            Z_list(iU) = load(filename);
+        end
         cd('..');
     end
     U_list = U_LIST;

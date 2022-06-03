@@ -24,7 +24,11 @@ function [kins,U_list]  = kinetic_line(U_LIST)
            error(errstr);
         end
         cd(UDIR); 
-        
+        if not(isfile('dmft_kinetic_energy.dat'))
+           kins(iU) = NaN;
+           cd('..');
+           continue;
+        end
         % The dmft_kinetic_energy.dat file has a weird structure...
         try
          strCell = readcell('dmft_kinetic_energy.dat'); % cell of strings
@@ -40,6 +44,7 @@ function [kins,U_list]  = kinetic_line(U_LIST)
     postDMFT.writematrix(kins,filename,'Delimiter','tab');
     U_list = U_LIST;
 end
+
 
 
 

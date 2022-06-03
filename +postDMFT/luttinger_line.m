@@ -33,7 +33,11 @@ function [L_list,U_list] = luttinger_line(suffix,U_LIST)
         else
             filename = 'luttinger.dat';
         end
-        L_list(iU) = load(filename);
+        if not(isfile(filename))
+            L_list(iU) = NaN;
+        else
+            L_list(iU) = load(filename);
+        end
         cd('..');
     end
     U_list = U_LIST;
