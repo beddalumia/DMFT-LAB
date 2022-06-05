@@ -42,7 +42,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fclose(Ulist); flose(Uconv);
+fclose(Ulist); fclose(Uconv);
 
 end
 
