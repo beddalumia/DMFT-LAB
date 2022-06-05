@@ -12,7 +12,9 @@ function unconverged = refresh_point(EXE,doMPI,Nnew,varargin)
 usedinput  = dir([pwd, '/used.*']);
 parts = strsplit(usedinput.name,'.');
 newname = cell2mat(join(parts(2:end),'.'));
-movefile(usedinput.name,newname);
+try % TEMPORARY: I need to save my ass on Ulysses...
+copyfile(usedinput.name,newname); %[NOT MOVEFILE PLEASE: corruption prone!]
+end
 
 %% Move *.used into *.restart [desirable: first new loop == last old loop]
 usedpack = dir([pwd, '/*.used']);
