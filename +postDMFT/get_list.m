@@ -18,9 +18,19 @@ function [flist, strlist] = get_list(VARNAME)
     end
     for i = 1:N
         DIR = subfolders(i).name; % Let's get the indexed string...
+      try
         flist(i) = sscanf(DIR, [VARNAME,'=%f']); %...and extract the value!
         strlist(i) = DIR;
+      catch
+        disp(' ')
+        disp(DIR)
+        disp('> spurious directory: will be discarded')
+        flist(i) = NaN;
+      end
     end
+    % Prune away all the NaNs
+    flist = flist(~isnan(flist));
+    strlist = strlist(~isnan(flist));
     % We need to sort the lists by floats (not strings, as it is now)
     [flist, sortedIDX] = sort(flist); strlist = strlist(sortedIDX);
 end
