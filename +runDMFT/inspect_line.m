@@ -21,13 +21,16 @@ conv_ratio = length(U_conv)/tot_points*100;
 
 % Print to standard output
 if nargout == 0
-   fprintf('\n\n')
+   fprintf('\n')
    fprintf('Total number of points: %d (so far)\n', tot_points)
    fprintf('Converged points ratio: %d%% (so far)\n', round(conv_ratio))
+   fprintf('\n')
 end
 % Somewhat awful, but comfy :)
 if nargin > 0
-  disp(unconv_pts) 
+   disp Unconverged:
+   disp ' '
+   disp(unconv_pts) 
 end
 
 end
