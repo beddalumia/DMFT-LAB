@@ -1,37 +1,63 @@
-function refresh_line(EXE,doMPI,Nnew,ignConv,varargin)
+function refresh_line(EXE,doMPI,Nnew,mode,varargin)
 %% Refreshes a pre-existent calculation by Nnew loops [whole-line]
 %
-%   runDMFT.refresh_line(EXE,doMPI,Nnew,ignConv,varargin)
+%   runDMFT.refresh_line(EXE,doMPI,Nnew,mode,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI
 %   Nnew                : How much loops to add in the refresh
-%   ignConv             : Flag to ignore the U_conv.txt file [default=1]
+%   mode                : Optional string defining whichˆ points to refresh
 %   varargin            : Set of fixed control parameters ['name',value]
+%
+% ˆ['all': all subfolders, 'conv': read U_conv.txt, 'nonconv': all - conv]
+%  >> default mode is 'nonconv'
 
 %% Open file to write/update converged U-values
 fileID_conv = fopen('U_conv.txt','a');
 
 %% Default behavior if no provided ignConv
 if nargin <= 3
-   ignConv = true;
+   mode = 'nonconv';
 end
 
-%% Retrieve the list of the *converged* U-values
-U_converged = unique(sort(load('U_conv.txt')));
+%% Retrieve the list of *converged* U-values
+U_conv = unique(sort(load('U_conv.txt')));
 
-%% Build the list of all U-values or use the converged ones only
-if isempty(U_converged) || ignConv == true
-   [U_list, ~] = postDMFT.get_list('U');  
-else
-    U_list = U_converged;
+%% Retrieve the list of all available U-values
+U_list = postDMFT.get_list('U');
+
+%% Define which list of U-values refresh
+switch mode
+    
+    case 'all'
+        
+        U = U_list;
+        
+    case 'conv'
+        
+        U = U_conv;
+        if isempty(U) 
+           warning('There are no converged points!')
+        end
+        
+    case 'nonconv'
+        
+        U = setdiff(U_list,U_conv);
+        if isempty(U) 
+           warning('There are no unconverged points!')
+        end
+        
+    otherwise
+
+        error('Invalide mode.')
+        
 end
 
 %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-for U = U_list'
+for i = 1:length(U)
 
-    UDIR= sprintf('U=%f',U);       % Define the U-folder name.
+    UDIR = sprintf('U=%f',U(i));   % Define the U-folder name.
 
     if isfolder(UDIR)
         cd(UDIR);                  % Enter the U-folder (if it exists)
@@ -46,8 +72,8 @@ for U = U_list'
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
-    if not(unconverged) && isempty(find(U_converged == U,1))
-        fprintf(fileID_conv,'%f\n', U);         % Update U_conv, only
+    if not(unconverged) && isempty(find(U_conv == U(i),1))
+        fprintf(fileID_conv,'%f\n', U(i));      % Update U_conv, only
     end                                         % if *newly* converged
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
