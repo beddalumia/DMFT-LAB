@@ -5,6 +5,7 @@ Running QcmPlab DMFT codes from MATLAB
 
 ### Choose your favorite workflow
 
+
 #### Production
 
 - `dry_line()` The most basic scenario: linear increase of U, no feedback, just some noninvasive check of convergence to flag out, _a posteriori_, which points should be discarded. 
@@ -18,6 +19,9 @@ Running QcmPlab DMFT codes from MATLAB
 
 - `refresh_line()` Systematically enters the folder structure of a pre-existent calculation and uses the given _used_ files as a _restart_ to perform some additional dmft loops. Useful if something has been added to the driver or if you want to change something in the inputfile for just one last loop (e.g. `dm_flag`, `chi_flag`...). It has also a single-point variant, for maximum flexibility: `refresh_point()` that can be called from within a computation folder.
 
+- `inspect_line()` Call if you wish to inspect, at runtime, how much points have been computed, how much have converged and which have not.
+
+
 #### Testing & Setup
 
 - `interactive_line()` Interactive-ish workflow: on-the-flight manual updates of the inputfile, while dmft waits for you (in a dumb way); Hubbard steps are inevitably fixed.
@@ -28,6 +32,14 @@ Running QcmPlab DMFT codes from MATLAB
 
 ### TODO
 
-- [ ] `automixing_line()` Automatic control of self-mixing. Requires inspecting evolution of the dmft error, could be cumbersome (better handled at a lower level, e.g. within the dmft-loop driver: see [`adaptive_mix()`](https://github.com/QcmPlab/SciFortran/blob/master/src/SF_OPTIMIZE/adaptive_mix.f90) in SciFortran).
+- [ ] `dry_array()` A variant of `dry_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
 
-- [ ] `array_line()` A variant of `dry_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities. [**PRIORITY**]
+- [ ] `refresh_array()` A variant of `refresh_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
+
+- [ ] `dry_array()` A variant of `dry_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
+
+- [ ] `autostep_array()` A variant of `autostep_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
+
+- [ ] `autosampling_line` A replacement to `autostep_line()` (which would enter a deprecation cycle), aimed at controlling the step by inspecting the number of loops.
+
+- [ ] `automixing_line()` Automatic control of self-mixing. Requires inspecting evolution of the dmft error, could be cumbersome (better handled at a lower level, e.g. within the dmft-loop driver: see [`adaptive_mix()`](https://github.com/QcmPlab/SciFortran/blob/master/src/SF_OPTIMIZE/adaptive_mix.f90) in SciFortran).

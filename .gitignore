@@ -1,0 +1,6 @@
+# Default autosave extensions
+*.asv
+*.m~
+
+# Octave session info
+octave-workspace
