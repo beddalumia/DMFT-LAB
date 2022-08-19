@@ -1,4 +1,4 @@
-function spectral_stack(filename,dx,dy,ulist,varargin)
+function spectral_stack(filename,dx,dy,ulist,cmap_name,varargin)
 %% SPECTRAL_STACK: Builds a classic stacked plot for the requested spectral
 %                  tensors, reading along a computed U-driven line
 %
@@ -8,7 +8,10 @@ function spectral_stack(filename,dx,dy,ulist,varargin)
 %  dx       : horizontal step for stacking, in units of U, for proper scaling
 %  dy       : vertical step for stacking, in units of U, for proper scaling
 %  ulist    : an array of values for Hubbard interaction U (could be empty!)
+%  cmap_name: name of the desired colormap as a string (see colorlab)
 %  varargin : additional options to be passed to plotter
+%
+% See also get_palette palette paletteshow
 %  ------------------------------------------------------------------------
     if ~exist('ulist','var') || isempty(ulist)
         [ulist, ~] = postDMFT.get_list('U'); 
@@ -20,8 +23,8 @@ function spectral_stack(filename,dx,dy,ulist,varargin)
 
     fprintf('Start stacking spectra...\n\n');
 
-    plotDMFT.colorlab_importall();
-    colorlist = palette.cubehelix;
+    plotDMFT.import_colorlab();
+    colorlist = get_palette(cmap_name,Nu);
 
     for iU = 1:Nu
 
