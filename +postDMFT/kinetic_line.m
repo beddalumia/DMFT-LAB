@@ -30,14 +30,10 @@ function [kins,U_list]  = kinetic_line(U_LIST)
            continue;
         end
         % The dmft_kinetic_energy.dat file has a weird structure...
-        try
-         strCell = readcell('dmft_kinetic_energy.dat'); % cell of strings
-         tempStr = strCell{1};                          % single string
-         tempVec = sscanf(tempStr,'%f');                % extract all the %f
-        catch
-         tempVec = load('dmft_kinetic_energy.dat');     % direct way (unsafe)
-        end
+        system('head -1 dmft_kinetic_energy.dat > tmp_energia_cinetica.txt');
+        tempVec = load('tmp_energia_cinetica.txt'); % this should be safe...
         kins(iU) = tempVec(1); % For sure the 1st value is the total K.E.
+        system('rm tmp_energia_cinetica.txt');
         cd('..');
     end
     filename = 'kinetic_energy.txt';
