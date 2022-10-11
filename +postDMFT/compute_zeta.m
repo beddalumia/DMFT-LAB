@@ -46,7 +46,7 @@ function [Z_list,U_list] = compute_zeta(filename,window,U_LIST)
     U_list = U_LIST;
     suffix = erase(erase(filename,'impSigma_'),'realw.ed');
     if(~isempty(suffix))
-        filename = ['zeta_realw',suffix,'.txt'];
+        filename = ['zeta_',suffix,'realw.txt'];
     else
         filename = 'zeta_realw.txt';
     end
