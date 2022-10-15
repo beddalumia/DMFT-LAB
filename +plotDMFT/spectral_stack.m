@@ -7,7 +7,7 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,varargin)
 %  filename : filename of the complex spectral function to be plotted
 %  dx       : horizontal step for stacking, in units of U, for proper scaling
 %  dy       : vertical step for stacking, in units of U, for proper scaling
-%  cmap_name: name of the desired colormap as a string (see colorlab)
+%  cmap_name: name of the desired colormap as a string (optional, see colorlab)
 %  ulist    : an array of values for Hubbard interaction U (could be empty!)
 %  varargin : additional options to be passed to plotter
 %
@@ -17,6 +17,9 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,varargin)
         [ulist, ~] = postDMFT.get_list('U'); 
     else
         ulist = sort(ulist);
+    end
+    if ~exist('cmap_name','var') || isempty(cmap_name)
+        cmap_name = 'berlin';
     end
 
     Nu = length(ulist);
