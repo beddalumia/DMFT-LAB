@@ -33,10 +33,10 @@ function [Z_list,U_list] = compute_zeta(filename,window,U_LIST)
             allfiles = dir('impSigma*realw.ed');
             filename = allfiles(1).name;
         end
-        if(isempty(strfind(filename,'Sigma')))
+        if(~contains(filename,'Sigma'))
            warning('The file may not contain a self-energy.'); 
         end
-        if(isempty(strfind(filename,'realw')))
+        if(~contains(filename,'realw'))
            warning('This algorithm works for the real part only.'); 
         end
         SIGMA = plotDMFT.spectral_load(filename);
