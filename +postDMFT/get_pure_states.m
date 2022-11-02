@@ -1,15 +1,16 @@
 function [states, probs] = get_pure_states(suffix,check)
 %% Getting all information about pure states (cross-checking with the RDM)
 %
-%       [states, probs] = get_pure_states(suffix,check)
+%       [states, probs] = get_pure_states(suffix[,check])
 %
 %  states: a cell of pure-state vectors [states{i} is a complex array]
 %  probs: an array of pure-state probabilities [probs(i) = 𝓟(states{i})]
-%  suffix: an optional charvec / string, handling inequivalent filenames
+%  suffix: a *required* charvec / string, handling inequivalent filenames
 %  check: an optional boolean to activate the RDM crosscheck [default:F]
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(nargin<1)
-        suffix = [];
+        help postDMFT.get_pure_states
+        return
     end
     if(~isempty(suffix))
         filename_p = ['probabilities_',suffix,'.dat'];
