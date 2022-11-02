@@ -1,23 +1,35 @@
-function refresh_line(EXE,doMPI,Nnew,mode,varargin)
+function refresh_line(EXE,doMPI,Nnew,where,varargin)
 %% Refreshes a pre-existent calculation by Nnew loops [whole-line]
 %
-%   runDMFT.refresh_line(EXE,doMPI,Nnew,mode,varargin)
+%   runDMFT.refresh_line(EXE,doMPI,Nnew,where,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI
 %   Nnew                : How much loops to add in the refresh
-%   mode                : Optional string defining whichˆ points to refresh
+%   where               : Optional input defining whichˆ points to refresh
 %   varargin            : Set of fixed control parameters ['name',value]
 %
 % ˆ['all': all subfolders, 'conv': read U_conv.txt, 'nonconv': all - conv]
-%  >> default mode is 'nonconv'
+%  >> default string is 'nonconv'
+%  >> you shall pass even an array of floats instead of a string, in that
+%     case those would be the values to be refreshed (at your own risk).
+
+%% Print docstring if no input is provided
+if nargin < 1
+   help runDMFT.refresh_line 
+   return
+end
 
 %% Open file to write/update converged U-values
 fileID_conv = fopen('U_conv.txt','a');
 
-%% Default behavior if no provided ignConv
+%% Default behavior if no provided where
 if nargin <= 3
    mode = 'nonconv';
+elseif isnumeric(where)
+   mode = 'custom';
+else
+   mode = where; 
 end
 
 %% Retrieve the list of *converged* U-values
@@ -47,9 +59,16 @@ switch mode
            warning('There are no unconverged points!')
         end
         
+    case 'custom'
+        
+        U = where;
+        fprintf('Refreshing the following points:')
+        disp(U)
+        
     otherwise
 
-        error('Invalide mode.')
+        help runDMFT.refresh_line
+        error('Invalid set of points (what you passed as where?).')
         
 end
 
