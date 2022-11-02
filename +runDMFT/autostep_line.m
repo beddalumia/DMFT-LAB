@@ -10,6 +10,12 @@ function autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
 %   Ustart,Ustop        : Input Hubbard interaction [Ustart<U<Ustop or Ustart>U>Ustop]
 %   varargin            : Set of fixed control parameters ['name',value]
 
+%% Print docstring if no input is provided
+if nargin < 1
+   help runDMFT.autostep_line 
+   return
+end
+
 Ulist = fopen('U_list.txt','a');
 Uconv = fopen('U_conv.txt','a');
 

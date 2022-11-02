@@ -10,6 +10,12 @@ function interactive_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
 %   Ustart,Ustep,Ustop  : Input Hubbard interaction [Ustart:Ustep:Ustop]
 %   varargin            : Set of fixed control parameters ['name',value]
 
+%% Print docstring if no input is provided
+if nargin < 1
+   help runDMFT.interactive_line 
+   return
+end
+
 if sign(Ustop-Ustart) ~= sign(Ustep)
    Ustep = -Ustep;
    warning('Changed sign to Ustep to avoid infinite loops!');

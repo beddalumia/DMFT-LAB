@@ -8,6 +8,12 @@ function unconverged = refresh_point(EXE,doMPI,Nnew,varargin)
 %   Nnew                : How much loops to add in the refresh
 %   varargin            : Set of fixed control parameters ['name',value]
 
+%% Print docstring if no input is provided
+if nargin < 1
+   help runDMFT.refresh_point 
+   return
+end
+
 %% Move used.input into input [crucial: we do not know about touched ctrl-vars]
 usedinput  = dir([pwd, '/used.*']);
 parts = strsplit(usedinput.name,'.');

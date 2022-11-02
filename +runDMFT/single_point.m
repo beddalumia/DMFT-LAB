@@ -9,6 +9,12 @@ function unconverged = single_point(EXE,doMPI,U,Uold,varargin)
 %   Uold                       : Restart point [NaN or empty -> no restart]
 %   varargin                   : Set of control parameters ['name',value]
 
+%% Print docstring if no input is provided
+if nargin < 1
+   help runDMFT.single_point 
+   return
+end
+
 UDIR=sprintf('U=%f',U);        % Make a folder named 'U=...', where '...'
 mkdir(UDIR);                   % is the given value for Hubbard interaction
 cd(UDIR);                      % Enter the U-folder
