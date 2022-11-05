@@ -1,7 +1,7 @@
 function [states, probs] = get_pure_states(suffix,check)
 %% Getting all information about pure states (cross-checking with the RDM)
 %
-%       [states, probs] = get_pure_states(suffix[,check])
+%       [states, probs] = postDMFT.get_pure_states(suffix[,check])
 %
 %  states: a cell of pure-state vectors [states{i} is a complex array]
 %  probs: an array of pure-state probabilities [probs(i) = 𝓟(states{i})]
