@@ -38,7 +38,7 @@ function pure_states(suffix,check)
         for j = 1:Nrdm
             stride = j + (i-1) * Nrdm;
             weights(stride) = p(i) * norm(c{i}(j))^2;
-            labels{stride} = build_ket(j,c{i}(j));
+            labels{stride} = build_ket(j-1,c{i}(j)); % BIN STARTS FROM 0
         end
     end
     
