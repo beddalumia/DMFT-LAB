@@ -33,19 +33,19 @@ function pure_states(suffix,check)
 
     % Build the basis state weights (and labels)
     weights = zeros(Nrdm^2,1);
-    labels = strings(Nrdm^2,1);
+    labels = cell(Nrdm^2,1);
     for i = 1:Nrdm
         for j = 1:Nrdm
             stride = j + (i-1) * Nrdm;
             weights(stride) = p(i) * norm(c{i}(j))^2;
-            labels(stride) = build_ket(j,c{i}(j));
+            labels{stride} = build_ket(j,c{i}(j));
         end
     end
     
     % Setup pie-chart metadata
     exploded = false(size(weights));
-    exploded(weights > 0.3) = true;
-    labels(weights < 0.3) = "";
+    exploded(weights > 0.1) = true;
+    labels(weights < 0.1) = {''};
 
     % Sort the slices
     [weights,indices] = sort(weights);
@@ -67,13 +67,14 @@ function pure_states(suffix,check)
         for ilat = 1:Nlat
             for ispin = 1:2
                 shift = (ilat-1)*Norb + (ispin-1)*Norb*Nlat;
-                vec(shift+(1:Norb)) = bitget(state,shift+(1:Norb));
+                index = shift+(1:Norb);
+                vec(index) = bitget(state,index);
             end
         end
-        ketup = string(num2str(vec(1:Norb*Nlat)));
-        ketdw = string(num2str(vec(Norb*Nlat+1:end)));
-        ket = "| "+strrep(ketup,'1','↑')+" ; "+strrep(ketdw,'1','↓')+" 〉";
-        ket = string(coefficient) + " × " +strrep(ket,'0',' • ');
+        kup = num2str(vec(1:Norb*Nlat));
+        kdw = num2str(vec(Norb*Nlat+1:end));
+        ket = ['| ' strrep(kup,'1','↑') ' ; ' strrep(kdw,'1','↓') ' 〉'];
+        ket = [num2str(coefficient) ' × ' strrep(ket,'0',' • ')];
     end
 end
 
