@@ -1,30 +1,39 @@
-function spectral_stack(filename,dx,dy,cmap_name,ulist,varargin)
+function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
 %% SPECTRAL_STACK: Builds a classic stacked plot for the requested spectral
 %                  tensors, reading along a computed U-driven line
 %
-%   >> plotDMFT.spectral_stack(filename,dx,dy,cmap_name,ulist,varargin)
+%   >> plotDMFT.spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
 %
 %  filename : filename of the complex spectral function to be plotted
 %  dx       : horizontal step for stacking, in units of U, for proper scaling
 %  dy       : vertical step for stacking, in units of U, for proper scaling
 %  cmap_name: name of the desired colormap as a string (optional, see colorlab)
 %  ulist    : an array of values for Hubbard interaction U (could be empty!)
+%  which    : which function to plot? ['real' or 'imag', if not given both]
 %  varargin : additional options to be passed to plotter
 %
 % See also get_palette palette paletteshow
 %  ------------------------------------------------------------------------
-    if ~exist('ulist','var') || isempty(ulist)
+    if nargin < 4 || isempty(cmap_name)
+        cmap_name = 'berlin';
+    end
+
+    if nargin < 5 || isempty(ulist)
         [ulist, ~] = postDMFT.get_list('U'); 
     else
         ulist = sort(ulist);
     end
-    if ~exist('cmap_name','var') || isempty(cmap_name)
-        cmap_name = 'berlin';
+    
+    if nargin < 6 || isempty(which)
+        figure("Name",'real')
+        spectral_stack(filename,dx,dy,cmap_name,ulist,'real',varargin{:})
+        figure("Name",'imag')
+        spectral_stack(filename,dx,dy,cmap_name,ulist,'imag',varargin{:})
     end
 
     Nu = length(ulist);
 
-    fprintf('Start stacking spectra...\n\n');
+    fprintf('Start stacking %s spectra...\n\n',which);
 
     plotDMFT.import_colorlab();
     colorlist = get_palette(cmap_name,Nu);
