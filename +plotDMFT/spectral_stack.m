@@ -31,9 +31,9 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
     
     if nargin < 6 || isempty(which)
         figure("Name",'real')
-        spectral_stack(filename,dx,dy,cmap_name,ulist,'real',varargin{:})
+        plotDMFT.spectral_stack(filename,dx,dy,cmap_name,ulist,'real',varargin{:})
         figure("Name",'imag')
-        spectral_stack(filename,dx,dy,cmap_name,ulist,'imag',varargin{:})
+        plotDMFT.spectral_stack(filename,dx,dy,cmap_name,ulist,'imag',varargin{:})
         return
     end
 
