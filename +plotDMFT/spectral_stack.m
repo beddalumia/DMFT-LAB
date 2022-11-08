@@ -76,14 +76,18 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
 
         % Hold the figure handle
         hold on
-        
-        % Adjust title to highlight U value
-        title(UDIR);
 
         % Exit directory
         cd('..');
 
     end
+    
+    % Add label on y axis
+    [~,body,~] = fileparts(filename);
+    ylabel(body,'Interpreter','none');
+    
+    % Adjust title to highlight U values
+    title([upper(which),'PART'],sprintf('U=%d:%d',ulist(1),ulist(end)));
     
     fprintf('...DONE.\n\n');
 
