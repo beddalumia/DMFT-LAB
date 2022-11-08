@@ -14,6 +14,11 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
 %
 % See also get_palette palette paletteshow
 %  ------------------------------------------------------------------------
+    if nargin < 1
+       help plotDMFT.spectral_stack
+       return
+    end
+
     if nargin < 4 || isempty(cmap_name)
         cmap_name = 'berlin';
     end
@@ -29,6 +34,7 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
         spectral_stack(filename,dx,dy,cmap_name,ulist,'real',varargin{:})
         figure("Name",'imag')
         spectral_stack(filename,dx,dy,cmap_name,ulist,'imag',varargin{:})
+        return
     end
 
     Nu = length(ulist);
