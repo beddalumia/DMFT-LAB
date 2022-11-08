@@ -63,7 +63,12 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
         f = plotDMFT.spectral_load(filename);
 
         % Plot f(x+dx)+dy curves
-        plot(f.zeta+U*dx,f.imag+U*dy,'Color',colorlist(iU,:),varargin{:});
+        switch which
+            case 'real'
+            plot(f.zeta+U*dx,f.real+U*dy,'Color',colorlist(iU,:),varargin{:});
+            case 'imag'
+            plot(f.zeta+U*dx,f.imag+U*dy,'Color',colorlist(iU,:),varargin{:});
+        end
         % We could directly use waterfall(), but it requires Z to be a
         % meshgrid or something (a matrix) and the plotting to be done
         % outside of the loop: it would be also faster... and the plot
