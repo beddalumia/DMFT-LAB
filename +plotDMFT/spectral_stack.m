@@ -85,8 +85,13 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
 
     end
     
-    % Add label on y axis
+    % Add label on x and y axis
     [~,body,~] = fileparts(filename);
+    if      any(strfind(body,'realw'))
+        xlabel('$\omega$','Interpreter','latex');
+    elseif  any(strfind(body,'iw'))
+        xlabel('$i\omega$','Interpreter','latex');
+    end
     ylabel(body,'Interpreter','none');
     
     % Adjust title to highlight U values
@@ -100,7 +105,8 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
         caxis([min(ulist),max(ulist)]);
     end
     colormap(colorlist);
-    colorbar('Location','eastoutside');
+    cbar = colorbar('Location','eastoutside');
+    cbar.Label.String = 'Hubbard interaction';
     
     fprintf('...DONE.\n\n');
 
