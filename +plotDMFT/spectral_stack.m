@@ -87,7 +87,10 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
     ylabel(body,'Interpreter','none');
     
     % Adjust title to highlight U values
-    title([upper(which),'PART'],sprintf('U=%d:%d',ulist(1),ulist(end)));
+    title([upper(which),' PART']);
+    
+    % Add legend (huge, but unavoidable I guess...)
+    legend(string(ulist),'Location','bestoutside');
     
     fprintf('...DONE.\n\n');
 
