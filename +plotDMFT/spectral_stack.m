@@ -99,6 +99,7 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
     catch % ver < R2022a
         caxis([min(ulist),max(ulist)]);
     end
+    colormap(colorlist);
     colorbar('Location','eastoutside');
     
     fprintf('...DONE.\n\n');
