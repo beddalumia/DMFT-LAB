@@ -12,6 +12,9 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
 %  which    : which function to plot? ['real' or 'imag', if not given both]
 %  varargin : additional options to be passed to plotter
 %
+% NOTE: this plot would convey misleading information if the ulist is not
+%       evenly spaced, in such case please consider spectral_gif instead.
+%
 % See also get_palette palette paletteshow
 %  ------------------------------------------------------------------------
     if nargin < 1
@@ -89,8 +92,14 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
     % Adjust title to highlight U values
     title([upper(which),' PART']);
     
-    % Add legend (huge, but unavoidable I guess...)
-    legend(string(ulist),'Location','bestoutside');
+    % Add legend (as a colorbar... which makes sense for an evenly spaced
+    %             ulist, but that's already the case for the whole plot..)
+    try 
+        clim([min(ulist),max(ulist)]);
+    catch % ver < R2022a
+        caxis([min(ulist),max(ulist)]);
+    end
+    colorbar('Location','eastoutside');
     
     fprintf('...DONE.\n\n');
 
