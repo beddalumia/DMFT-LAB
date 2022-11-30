@@ -47,11 +47,11 @@ function pure_states_asci(file_rdm,Nlat,file_states)
         inner_tree(1,:) = inner_tree(1,:) + outer_tree(1,i);
         inner_tree(2,:) = inner_tree(2,:) + outer_tree(2,i);
         % Assign labels, when appropriate (p(i)*|c{i}(j)|^2 > 1%)
-        labels = build_ket(file_states,c{i}(:)); % BIN STARTS FROM 0
+        labels = build_ket(file_states,c{i}(:));
         for j = 1:Nrdm
             abs_weight(j) = p(i) * norm(c{i}(j))^2;
             if abs_weight(j) < 0.01
-            %    labels{j} = '';
+                labels{j} = '';
             end
         end
         plotRectangles(inner_tree,labels,colormap);
@@ -344,7 +344,7 @@ function [c,p] = get_pure_states(file_rdm)
     
     c = cell(size(D));
     for i = 1:size(D,1)
-        c{i} = V(i,:);
+        c{i} = V(:,i);
     end
 
 end
