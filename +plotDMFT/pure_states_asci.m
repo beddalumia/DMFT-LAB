@@ -1,14 +1,14 @@
-function pure_states(suffix,check)
+function pure_states_asci(file_rdm,Nlat,file_states)
 %% Visualizing all information about pure states, for a given point.
 %
-%       >> plotDMFT.pure_states(suffix[,check])
+%       >> pure_states_asci(file_rdm,Nlat,file_states)
 %
 %  suffix: a *required* charvec / string, handling inequivalent filenames
 %  check: an optional boolean to activate the RDM crosscheck [default:F]
 %
 %  ➜ it draws a treemap with patches-area proportional to p(i)*|c{i}(j)|^2,
 %    where i spans the pure states, and p(i) is the associated probability
-%    and j spans the Fock-space basis, as defined in QcmPlab libraries.
+%    and j spans the Fock-space basis, as defined by the ASCI solver.
 %    The c{i}(j) are basis expansion coefficients for the pure states, so
 %    we have each patch with an area that intuitively represents how much
 %    a configuration state (from the basis) contributes to the groundstate.
@@ -20,19 +20,17 @@ function pure_states(suffix,check)
 
     % Input checking
     if(nargin<1)
-        help plotDMFT.pure_states
+        help pure_states_asci
         return
-    end
-    if(nargin<2)
-        check = false;
     end
     
     % Retrieve pure state data
-    [c,p] = postDMFT.get_pure_states(suffix,check);
+    %[c,p] = postDMFT.get_pure_states(suffix,check);
+    [c,p] = get_pure_states(file_rdm);
     
     % Dirty trick to extract number of sites from the suffix
     % [it would be improved once we standardize the suffix…]
-    Nlat = sscanf(suffix,'%d');
+    %Nlat = sscanf(file_rdm,'%d');
     % Then we can determine number of local orbitals, too :)
     Nrdm = length(p);
     Norb = log2(Nrdm)/(2*Nlat); % Nrdm = 2^(2*Nlat*Norb)
@@ -49,51 +47,30 @@ function pure_states(suffix,check)
         inner_tree(1,:) = inner_tree(1,:) + outer_tree(1,i);
         inner_tree(2,:) = inner_tree(2,:) + outer_tree(2,i);
         % Assign labels, when appropriate (p(i)*|c{i}(j)|^2 > 1%)
+        labels = build_ket(file_states,c{i}(:)); % BIN STARTS FROM 0
         for j = 1:Nrdm
             abs_weight(j) = p(i) * norm(c{i}(j))^2;
-            if abs_weight(j) > 0.01
-                labels{j} = build_ket(j-1,c{i}(j)); % BIN STARTS FROM 0
-            else
-                labels{j} = '';
+            if abs_weight(j) < 0.01
+            %    labels{j} = '';
             end
         end
         plotRectangles(inner_tree,labels,colormap);
     end
     outline(outer_tree,'-',2);
 
-    %% FROM ED_SETUP:
-    % |imp_up>|bath_up> * |imp_dw>|bath_dw>        <- 2*Nlat*Norb bits
-    % |imp_sigma> = | (1…Norb)_1...(1…Norb)_Nlat > <--- Nlat*Norb bits
-    % lso indices are: io = iorb + (ilat-1)*Norb + (ispin-1)*Norb*Nlat
-    function ket = build_ket(state,coefficient)
+    function kets = build_ket(file_state,coefficients)
         %% BUILD_KET : Puts together a pretty label for a pure state component
-        %  
-        %  >> ket = build_ket(state,coefficient)
-        %
-        %  state :: integer representation of a basis state (bits are spins)
-        %  coefficient :: projection of a given pure state into |state>
-        %
-        %  |coefficient|^2 gives the probability of collapsing the pure state
-        %  at hand into |state>, when doing a measure on any observable O for
-        %  which O|state> = o_val|state> (o_val being a real number).
-        %
-        %  This depends entirely on the Fock basis conventions choosen in all
-        %  ED-based solvers from QcmPlab.
-        %
-        %  Copyright 2022 Gabriele Bellomia
-        %
-        for ilat = 1:Nlat
-            for ispin = 1:2
-                shift = (ilat-1)*Norb + (ispin-1)*Norb*Nlat;
-                index = shift+(1:Norb);
-                vec(index) = bitget(state,index);
-            end
-        end
-        kup = num2str(vec(1:Norb*Nlat));
-        kdw = num2str(vec(Norb*Nlat+1:end));
-        ket = ['\mid ',strrep(kup,'1','\uparrow'),' \rangle \otimes ',...
-            '\mid ',strrep(kdw,'1','\downarrow'), ' \rangle'];
-        ket = [num2str(coefficient) ' \times ' strrep(ket,'0','\bullet')];
+        %              (following conventions adopted by ASCI solver)
+        file_stream = fopen(file_state,'r');
+        data = textscan(file_stream,'%s');
+        kets = string(data{:}(3:2:end));
+        kets = strrep(kets,'u','\uparrow');
+        kets = strrep(kets,'d','\downarrow');
+        kets = strrep(kets,'2','\leftrightarrow');
+        kets = strrep(kets,'0','\bullet');
+        kets = "\mid " + kets + " \rangle";
+        kets = string(coefficients) + " \times " + kets;
+        fclose(file_stream);
     end
 end
 
@@ -353,5 +330,22 @@ function outline(rectangles,style,thickness)
         patch(xPoints,yPoints,[0 0 0],...
             'FaceColor','none','LineWidth',thickness,'LineStyle',style)
     end
+
+end
+
+function [c,p] = get_pure_states(file_rdm)
+
+    asci_matrix = load(file_rdm);
+    full_matrix = full(spconvert(asci_matrix(2:end,:)));
+    
+    [V,D] = eig(full_matrix);
+    
+    p = diag(D);
+    
+    c = cell(size(D));
+    for i = 1:size(D,1)
+        c{i} = V(i,:);
+    end
+
 end
     
