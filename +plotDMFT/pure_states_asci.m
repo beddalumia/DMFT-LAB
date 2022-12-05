@@ -1,10 +1,7 @@
-function pure_states_asci(file_rdm,Nlat,file_states)
+function pure_states_asci(file_rdm,file_states,Nsites)
 %% Visualizing all information about pure states, for a given point.
 %
-%       >> pure_states_asci(file_rdm,Nlat,file_states)
-%
-%  suffix: a *required* charvec / string, handling inequivalent filenames
-%  check: an optional boolean to activate the RDM crosscheck [default:F]
+%       >> pure_states_asci(file_rdm,file_states,Nsites)
 %
 %  ➜ it draws a treemap with patches-area proportional to p(i)*|c{i}(j)|^2,
 %    where i spans the pure states, and p(i) is the associated probability
@@ -28,12 +25,10 @@ function pure_states_asci(file_rdm,Nlat,file_states)
     %[c,p] = postDMFT.get_pure_states(suffix,check);
     [c,p] = get_pure_states(file_rdm);
     
-    % Dirty trick to extract number of sites from the suffix
-    % [it would be improved once we standardize the suffix…]
-    %Nlat = sscanf(file_rdm,'%d');
+    % We set Nlat to the passed input (there's no way to infer from the files, yet)
+    Nlat = Nsites;
     % Then we can determine number of local orbitals, too :)
     Nrdm = length(p);
-    Norb = log2(Nrdm)/(2*Nlat); % Nrdm = 2^(2*Nlat*Norb)
 
     % Build the nested treemap: outer patches ~ p(i), inner ~ |c{i}(j)|^2
     outer_tree = treemap(p);
@@ -42,17 +37,23 @@ function pure_states_asci(file_rdm,Nlat,file_states)
     abs_weight = zeros(Nrdm,1);
     labels = cell(Nrdm^2,1);
     for i = 1:Nrdm
+        disp(i)
         expansion = c{i}.*conj(c{i});
         inner_tree = treemap(expansion,outer_tree(3,i),outer_tree(4,i));
         inner_tree(1,:) = inner_tree(1,:) + outer_tree(1,i);
         inner_tree(2,:) = inner_tree(2,:) + outer_tree(2,i);
         % Assign labels, when appropriate (p(i)*|c{i}(j)|^2 > 1%)
         labels = build_ket(file_states,c{i}(:));
+        fprintf('p_%d = %f\n\n',i,p(i))
         for j = 1:Nrdm
             abs_weight(j) = p(i) * norm(c{i}(j))^2;
+            fprintf('  w_%d = %f\n',j,norm(c{i}(j))^2)
+            fprintf('  p_%d * w_%d = %f\n\n',i,j,abs_weight(j))
             if abs_weight(j) < 0.01
                 labels{j} = '';
             end
+            % Uncomment to debug treemap areas:
+            % labels{j} = num2str(abs_weight(j));
         end
         plotRectangles(inner_tree,labels,colormap);
     end
@@ -63,7 +64,11 @@ function pure_states_asci(file_rdm,Nlat,file_states)
         %              (following conventions adopted by ASCI solver)
         file_stream = fopen(file_state,'r');
         data = textscan(file_stream,'%s');
-        kets = string(data{:}(3:2:end));
+        dets = data{:}(3:2:end);
+        for k = 1:Nrdm % How to vectorize this crap remains to be found...
+            dets{k} = dets{k}(1:Nlat);
+        end
+        kets = string(dets);
         kets = strrep(kets,'u','\uparrow');
         kets = strrep(kets,'d','\downarrow');
         kets = strrep(kets,'2','\leftrightarrow');
