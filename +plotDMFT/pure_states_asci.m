@@ -1,7 +1,7 @@
-function pure_states_asci(file_rdm,file_states,Nsites)
+function pure_states_asci(file_rdm,file_states,indices)
 %% Visualizing all information about pure states, for a given point.
 %
-%       >> pure_states_asci(file_rdm,file_states,Nsites)
+%       >> pure_states_asci(file_rdm,file_states,indices)
 %
 %  ➜ it draws a treemap with patches-area proportional to p(i)*|c{i}(j)|^2,
 %    where i spans the pure states, and p(i) is the associated probability
@@ -17,7 +17,7 @@ function pure_states_asci(file_rdm,file_states,Nsites)
 
     % Input checking
     if(nargin<1)
-        help pure_states_asci
+        help plotDMFT.pure_states_asci
         return
     end
     
@@ -26,7 +26,7 @@ function pure_states_asci(file_rdm,file_states,Nsites)
     [c,p] = get_pure_states(file_rdm);
     
     % We set Nlat to the passed input (there's no way to infer from the files, yet)
-    Nlat = Nsites;
+    Nlat = length(indices);
     % Then we can determine number of local orbitals, too :)
     Nrdm = length(p);
 
@@ -66,15 +66,15 @@ function pure_states_asci(file_rdm,file_states,Nsites)
         data = textscan(file_stream,'%s');
         dets = data{:}(3:2:end);
         for k = 1:Nrdm % How to vectorize this crap remains to be found...
-            dets{k} = dets{k}(1:Nlat);
+            dets{k} = [dets{k}(indices(1:2)),char(10),dets{k}(indices(3:4))];
         end
         kets = string(dets);
         kets = strrep(kets,'u','\uparrow');
         kets = strrep(kets,'d','\downarrow');
         kets = strrep(kets,'2','\leftrightarrow');
         kets = strrep(kets,'0','\bullet');
-        kets = "\mid " + kets + " \rangle";
-        kets = string(coefficients) + " \times " + kets;
+        %kets = "\mid " + kets + " \rangle";
+        kets = string(coefficients) + " \times " + char(10) + kets;
         fclose(file_stream);
     end
 end
