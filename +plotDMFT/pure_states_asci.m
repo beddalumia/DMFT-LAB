@@ -268,7 +268,7 @@ function plotRectangles(rectangles,labels,colors)
     
     for i = 1:size(rectangles,2)
         r = rectangles(:,i);
-        if isnan(r(3)) || isnan(r(4)) || r(3)==0 || r(4)==0
+        if isnan(r(3)) || isnan(r(4)) || r(3)<1e-12 || r(4)<1e-12
            continue 
         end
         xPoints = [r(1), r(1), r(1) + r(3),r(1) + r(3)];
