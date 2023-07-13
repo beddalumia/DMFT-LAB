@@ -23,13 +23,18 @@ if(~exist('Uold','var'))
     Uold = [];                 % no restart
 end
 
-oldDIR=sprintf('../U=%f',Uold);      % ------------------------------------
-if isfolder(oldDIR)                  % If it exist a "previous" folder: 
-restartpack = [oldDIR,'/*.restart']; % Copy all the restart files from the
-copyfile(restartpack,'./');          % last dmft evaluation...
-end                                  % ------------------------------------
-
 copyfile('../input*','./');  % Copy inside the **external** input file
+
+oldDIR=sprintf('../U=%f',Uold);       % ------------------------------------
+if isfolder(oldDIR)                   % If it exist a "previous" folder: 
+restartpack = [oldDIR,'/*.restart'];  % Copy all the restart files from the
+copyfile(restartpack,'./');           % last dmft evaluation... and also
+copyfile([oldDIR,'/used.*'],pwd);     % copy the used input file, so to 
+usedinput  = dir([pwd, '/used.*']);   % avoid silly errors when adding point
+parts = strsplit(usedinput.name,'.'); % in between an existing line.
+newname = cell2mat(join(parts(2:end),'.'));
+copyfile(usedinput.name,newname);     %
+end                                   % ------------------------------------
 
 %% Run FORTRAN code (already compiled and added to PATH!) %%%%%%%%%%%%%%%%%
 if doMPI
