@@ -1,12 +1,18 @@
-function unconverged = single_point(EXE,doMPI,U,Uold,varargin)    
+function unconverged = single_point(EXE,doMPI,var,new,old,varargin)    
 %% Runs a single-point calculation given:
 %
-%   unconverged = runDMFT.single_point(EXE,doMPI,U,Uold,varargin)  
+%   unconverged = runDMFT.single_point(EXE,doMPI,var,new,old,varargin) 
+%
+%   > runs a new point, in a $(var)=new directory, restarting from the
+%     $(var)=old directory. Default vale of $(var) used to be "U", but
+%     now is mandatory to pass it to the function. The "U" alias for 
+%     "Uloc" continues to be supported, to avoid corrupting old data.
 %
 %   EXE                        : Executable driver
 %   doMPI                      : Flag to activate OpenMPI
-%   U                          : Input Hubbard interaction
-%   Uold                       : Restart point [NaN or empty -> no restart]
+%   var                        : ID of the "main" variable (e.g. 'Uloc')
+%   new                        : Input value for the new point
+%   old                        : Restart point [NaN or empty -> no restart]
 %   varargin                   : Set of control parameters ['name',value]
 
 %% Print docstring if no input is provided
@@ -15,42 +21,51 @@ if nargin < 1
    return
 end
 
-UDIR=sprintf('U=%f',U);        % Make a folder named 'U=...', where '...'
-mkdir(UDIR);                   % is the given value for Hubbard interaction
-cd(UDIR);                      % Enter the U-folder
+DIR=sprintf('%s=%f',var,new); % Make a folder named 'var=...', where '...'
+mkdir(DIR);                   % is the given value for MAINVAR interaction
 
-if(~exist('Uold','var'))
-    Uold = [];                 % no restart
+if(~exist('old','var'))
+   old = [];                  % no restart directory, so...
+   copyfile('input*',DIR);    % copy inside the **external** input file
 end
 
-copyfile('../input*','./');  % Copy inside the **external** input file
-
-oldDIR=sprintf('../U=%f',Uold);       % ------------------------------------
+oldDIR=sprintf('%s=%f',var,old);      % ------------------------------------
 if isfolder(oldDIR)                   % If it exist a "previous" folder: 
 restartpack = [oldDIR,'/*.restart'];  % Copy all the restart files from the
-copyfile(restartpack,'./');           % last dmft evaluation... and also
-copyfile([oldDIR,'/used.*'],pwd);     % copy the used input file, so to 
-usedinput  = dir([pwd, '/used.*']);   % avoid silly errors when adding point
+copyfile(restartpack,DIR);            % last dmft evaluation... and also
+copyfile([oldDIR,'/used.*'],DIR);     % copy the used input file, so to 
+usedinput  = dir([DIR, '/used.*']);   % avoid silly errors when adding point
 parts = strsplit(usedinput.name,'.'); % in between an existing line.
 newname = cell2mat(join(parts(2:end),'.'));
-copyfile(usedinput.name,newname);     %
+oldpath = fullfile(DIR,usedinput.name);
+newpath = fullfile(DIR,newname);
+copyfile(oldpath,newpath);
+else                                  % Else raise an appropriate error, the
+error("Restart folder not found!")    % user should know there is no oldDIR.
 end                                   % ------------------------------------
+
+cd(DIR);                      % Enter the new-folder
 
 %% Run FORTRAN code (already compiled and added to PATH!) %%%%%%%%%%%%%%%%%
 if doMPI
-    mpi = 'mpirun ';                        % Control of MPI
+   mpi = 'mpirun ';                         % Control of MPI
 else                                        % boolean flag...
-    mpi = [];
+   mpi = [];
 end
-HUBBARD =sprintf(' uloc=%f',U);             % OVERRIDE of Uloc
-VAR = [];                                   % and
+if strcmp(var,"U")
+   MAINVAR = sprintf(' Uloc=%f',new);       % OVERRIDE of U (to Uloc)
+else
+   MAINVAR = sprintf(' %s=%f',var,new);     % Regular behavior
+end
+VARS = [];                                  % and
 for i = 1:2:(length(varargin)-1)            % ALL
     VARname = varargin{i};                  % the
     VARsval = char(string(varargin{i+1}));  % OTHER
-    VAR = [VAR,' ',VARname,'=',VARsval];    % PARAMETERS
+    VARS = [VARS,' ',VARname,'=',VARsval];  % PARAMETERS
 end		        
 out = ' | tee LOG.out';                     % Better to print this
-sys_call = [mpi,EXE,HUBBARD,VAR,out]%#ok    % to STDOUT...
+sys_call = [mpi,EXE,MAINVAR,VARS,out];      % to STDOUT...
+disp(sys_call)
 tic
 system(sys_call);                           % Fortran-call
 chrono = toc;
@@ -66,6 +81,6 @@ if(unconverged)
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-cd ..                           % Exit the U-folder
+cd ..                           % Exit the $(var)-folder
 
 end
