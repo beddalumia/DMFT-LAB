@@ -8,7 +8,9 @@ Running QcmPlab DMFT codes from MATLAB
 
 #### Production
 
-- `dry_line()` The most basic scenario: linear increase of U, no feedback, just some noninvasive check of convergence to flag out, _a posteriori_, which points should be discarded. 
+- `dry_line()` The most basic scenario: linear increase of U, no feedback, just some noninvasive check of convergence to flag out, _a posteriori_, which points should be discarded. **[deprecated]**
+
+- `vec_line()` New API for dry lines (see above): instead of passing a start, step and stop values for a linear span, you just directly pass an array, built the way you prefer. The original behavior of `dry_line()` is obtained by simply passing `start:step:stop`, as easy as it gets. Silly me for not writing it this way the firs time.
 
 - `autostop_line()` Basic linspace in U, without any adaptive feedback mechanism. Just stops the moment dmft does not converge (to avoid wasting cpu-time).
 
@@ -35,8 +37,6 @@ Running QcmPlab DMFT codes from MATLAB
 - [ ] `dry_array()` A variant of `dry_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
 
 - [ ] `refresh_array()` A variant of `refresh_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
-
-- [ ] `dry_array()` A variant of `dry_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
 
 - [ ] `autostep_array()` A variant of `autostep_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
 
