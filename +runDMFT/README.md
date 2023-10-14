@@ -26,8 +26,6 @@ Running QcmPlab DMFT codes from MATLAB
 
 #### Testing & Setup
 
-- `interactive_line()` Interactive-ish workflow: on-the-flight manual updates of the inputfile, while dmft waits for you (in a dumb way); Hubbard steps are inevitably fixed.
-
 - `single_point()` It runs just a single-point calculation, but it supports a `Uold` value, to handle restart-files; to be called from a blank folder (the `inputfile` should be there, `Uold=%f` folder too).
 
 ----------
@@ -41,5 +39,7 @@ Running QcmPlab DMFT codes from MATLAB
 - [ ] `autostep_array()` A variant of `autostep_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
 
 - [ ] `autosampling_line` A replacement to `autostep_line()` (which would enter a deprecation cycle), aimed at controlling the step by inspecting the number of loops.
+
+### NOT-TODO
 
 - [ ] `automixing_line()` Automatic control of self-mixing. Requires inspecting evolution of the dmft error, could be cumbersome (better handled at a lower level, e.g. within the dmft-loop driver: see [`adaptive_mix()`](https://github.com/QcmPlab/SciFortran/blob/master/src/SF_OPTIMIZE/adaptive_mix.f90) in SciFortran).
