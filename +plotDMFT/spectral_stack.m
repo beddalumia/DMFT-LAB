@@ -1,18 +1,19 @@
-function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
+function spectral_stack(filename,dx,dy,cmap_name,list,var,which,varargin)
 %% SPECTRAL_STACK: Builds a classic stacked plot for the requested spectral
 %                  tensors, reading along a computed U-driven line
 %
-%   >> plotDMFT.spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
+%   >> plotDMFT.spectral_stack(filename,dx,dy,cmap_name,list,var,which,varargin)
 %
 %  filename : filename of the complex spectral function to be plotted
 %  dx       : horizontal step for stacking, in units of U, for proper scaling
 %  dy       : vertical step for stacking, in units of U, for proper scaling
 %  cmap_name: name of the desired colormap as a string (optional, see colorlab)
-%  ulist    : an array of values for Hubbard interaction U (could be empty!)
+%  list     : an array of values for main line variable (could be empty!)
+%  var      : an optional charvec, defining the name of the line variable [default: 'U']
 %  which    : which function to plot? ['real' or 'imag', if not given both]
 %  varargin : additional options to be passed to plotter
 %
-% NOTE: this plot would convey misleading information if the ulist is not
+% NOTE: this plot would convey misleading information if the list is not
 %       evenly spaced, in such case please consider spectral_gif instead.
 %
 % See also get_palette palette paletteshow
@@ -26,41 +27,45 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
         cmap_name = 'berlin';
     end
 
-    if nargin < 5 || isempty(ulist)
-        [ulist, ~] = postDMFT.get_list('U'); 
+    if nargin < 6
+        var = 'U';
+    end
+
+    if nargin < 5 || isempty(list)
+        [list, ~] = postDMFT.get_list(var); 
     else
-        ulist = sort(ulist);
+        list = sort(list);
     end
     
-    if nargin < 6 || isempty(which)
+    if nargin < 7 || isempty(which)
         figure("Name",'real')
-        plotDMFT.spectral_stack(filename,dx,dy,cmap_name,ulist,'real',varargin{:})
+        plotDMFT.spectral_stack(filename,dx,dy,cmap_name,list,var,'real',varargin{:})
         figure("Name",'imag')
-        plotDMFT.spectral_stack(filename,dx,dy,cmap_name,ulist,'imag',varargin{:})
+        plotDMFT.spectral_stack(filename,dx,dy,cmap_name,list,var,'imag',varargin{:})
         return
     end
 
-    Nu = length(ulist);
+    Ny = length(list);
 
     fprintf('Start stacking %s spectra...\n\n',which);
 
     plotDMFT.import_colorlab();
-    colorlist = get_palette(cmap_name,Nu);
+    colorlist = get_palette(cmap_name,Ny);
 
-    for iU = 1:Nu
+    for i = 1:Ny
 
         % Check for <U=%f> directory
-        U = ulist(iU);
-        UDIR = sprintf('U=%f',U);
-        if ~isfolder(UDIR)
-            errstr = 'U_list appears to be inconsistent: ';
-            errstr = [errstr,UDIR];
-            errstr = [errstr,' folder has not been found.'];
+        y = list(i);
+        DIR = sprintf('%s=%f',var,y);
+        if ~isfolder(DIR)
+            errstr = sprintf('%s_list appears to be inconsistent: ',var);
+            errstr = [errstr,DIR]; %#ok
+            errstr = [errstr,' folder has not been found.']; %#ok
             error(errstr);
         end
 
         % Enter directory
-        cd(UDIR); 
+        cd(DIR); 
 
         % Pick and plot the requested filename
         f = plotDMFT.spectral_load(filename);
@@ -68,9 +73,9 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
         % Plot f(x+dx)+dy curves
         switch which
             case 'real'
-            plot(f.zeta+U*dx,f.real+U*dy,'Color',colorlist(iU,:),varargin{:});
+            plot(f.zeta+y*dx,f.real+y*dy,'Color',colorlist(i,:),varargin{:});
             case 'imag'
-            plot(f.zeta+U*dx,f.imag+U*dy,'Color',colorlist(iU,:),varargin{:});
+            plot(f.zeta+y*dx,f.imag+y*dy,'Color',colorlist(i,:),varargin{:});
         end
         % We could directly use waterfall(), but it requires Z to be a
         % meshgrid or something (a matrix) and the plotting to be done
@@ -98,11 +103,11 @@ function spectral_stack(filename,dx,dy,cmap_name,ulist,which,varargin)
     title([upper(which),' PART']);
     
     % Add legend (as a colorbar... which makes sense for an evenly spaced
-    %             ulist, but that's already the case for the whole plot..)
+    %             list, but that's already the case for the whole plot..)
     try 
-        clim([min(ulist),max(ulist)]);
+        clim([min(list),max(list)]);
     catch % ver < R2022a
-        caxis([min(ulist),max(ulist)]);
+        caxis([min(list),max(list)]);
     end
     colormap(colorlist);
     cbar = colorbar('Location','eastoutside');

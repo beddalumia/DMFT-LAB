@@ -1,14 +1,18 @@
-function check_observables(suffix)
-%% Loads all observables in a U-line and builds a stacked-plot
-%  >> plotDMFT.chec_observables(<suffix>)
-%     suffix: an optional charvec, handling inequivalent filename endings
+function check_observables(var,suffix)
+%% Loads all observables in a $(var)-line and builds a stacked-plot
+%  >> plotDMFT.check_observables(<var>,<suffix>)
+%     var    : an optional charvec, defining the name of the line variable [default: 'U']
+%     suffix : an optional charvec, handling inequivalent filename endings
     if nargin < 1
+        var = 'U';
+    end
+    if nargin < 2
         suffix = [];
     end
-    [ids,O_cell,U_list] = postDMFT.observables_line(suffix);
+    [ids,O_cell,X_list] = postDMFT.observables_line(var,suffix);
     O_matrix = cell2mat(O_cell);
-    s = stackedplot(U_list,O_matrix);
-    xlabel("Hubbard U")
+    s = stackedplot(X_list,O_matrix);
+    xlabel(var)
     s.DisplayLabels = ids;
     set(gcf, 'Units', 'Normalized', 'OuterPosition', [0.4, 0, 0.2, 1]);
 end

@@ -1,51 +1,59 @@
-function spectral_gif(filename,style,dt,ulist,varargin)
+function spectral_gif(filename,style,dt,list,var,varargin)
 %% SPECTRAL_GIF: Builds a GIF for the line-evolution of the spectral functions
 %
-%   >> plotDMFT.spectral_gif(filename,style,dt,ulist,varargin)
+%   >> plotDMFT.spectral_gif(filename,style,dt,list,var,varargin)
 %
 %  filename : filename of the complex spectral function to be plotted
 %  style    : plotting style to be passed to plotDMFT.spectral_frame()
 %  dt       : delay-time for the GIF frames, in seconds
-%  ulist    : an array of values for Hubbard interaction U (could be empty!)
+%  list     : an array of values for main line variable (could be empty!)
+%  var      : an optional charvec, defining the name of the line variable [default: 'U']
 %  varargin : additional options passed to plotDMFT.spectral_frame()
 %  ------------------------------------------------------------------------
-    if ~exist('ulist','var') || isempty(ulist)
-        [ulist, ~] = postDMFT.get_list('U'); 
+    if nargin < 1
+        help plotDMFT.spectral_stack
+        return
+    end
+    if nargin < 5
+        var = 'U';
+    end
+    if nargin < 4 || isempty(list)
+        [list, ~] = postDMFT.get_list(var); 
     else
-        ulist = sort(ulist);
+        list = sort(list);
     end
 
-    Nu = length(ulist);
+    Nt = length(list);
 
     fprintf('Start GIF building...\n\n');
 
-    for iU = 1:Nu
+    for i = 1:Nt
 
         % Check for <U=%f> directory
-        U = ulist(iU);
-        UDIR = sprintf('U=%f',U);
-        if ~isfolder(UDIR)
-            errstr = 'U_list appears to be inconsistent: ';
-            errstr = [errstr,UDIR];
-            errstr = [errstr,' folder has not been found.'];
+        t = list(i);
+        DIR = sprintf('%s=%f',var,t);
+        if ~isfolder(DIR)
+            errstr = sprintf('%s_list appears to be inconsistent: ',var);
+            errstr = [errstr,DIR]; %#ok
+            errstr = [errstr,' folder has not been found.']; %#ok
             error(errstr);
         end
 
         % Enter directory
-        cd(UDIR); 
+        cd(DIR); 
 
         % Pick and plot the requested filename
         plotDMFT.spectral_frame(filename,style,varargin{:});
         
         % Adjust title to highlight U value
-        title(UDIR);
+        title(DIR);
 
         % Exit directory
         cd('..');
 
         % Push frame to gif file
         [~,body,~] = fileparts(filename);
-        plotDMFT.push_frame([body,'.gif'],iU,Nu,dt); close(gcf);
+        plotDMFT.push_frame([body,'.gif'],i,Nt,dt); close(gcf);
 
     end
     
