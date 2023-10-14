@@ -1,46 +1,49 @@
-function [Z_list,U_list] = zeta_line(suffix,U_LIST)
+function [Z_list,X_list] = zeta_line(var,suffix,X_list)
 %% Getting a list of Z-weight values, from directories.
 %
-%       [Z_list,U_list] = postDMFT.zeta_line(suffix,U_LIST)
+%       [Z_list,X_list] = postDMFT.zeta_line(var,suffix,X_list)
 %
-%  Z_list: a float-array, forall U, giving all the quasiparticle weight values
-%  suffix: an optional charvec, handling inequivalent filename endings
-%  U_LIST: an optional array of values of Hubbard interaction: where to search
+%  var    : an optional char for the name of the line variable [default: 'U'] 
+%  suffix : an optional charvec, handling inequivalent filename endings
+%  Z_list : a float-array, forall X, giving all the quasiparticle weight values
+%  X_list : an optional array of values for the line variable: where to search
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if(~exist('suffix','var'))
+   if(nargin<1)
+      var = 'U';
+   end
+   if(nargin<2)
       suffix = [];
-    end
-    if ~exist('U_LIST','var') || isempty(U_LIST)
-       [U_LIST, ~] = postDMFT.get_list('U'); 
-    else
-       U_LIST = sort(U_LIST);
-    end
+   end
+   if(nargin<3 || isempty(X_list))
+      [X_list, ~] = postDMFT.get_list(var); 
+   else
+      X_list = sort(X_list);
+   end
     % Then we can proceed spanning all the U-values
-    Nu = length(U_LIST);
-    Z_list = zeros(Nu,1);
-    for iU = 1:length(U_LIST)
-        U = U_LIST(iU);
-        UDIR= sprintf('U=%f',U);
-        if ~isfolder(UDIR)
-           errstr = 'U_list appears to be inconsistent: ';
-           errstr = [errstr,UDIR];
-           errstr = [errstr,' folder has not been found.'];
-           error(errstr);
+    Nx = length(X_list);
+    Z_list = zeros(Nx,1);
+    for i = 1:length(X_list)
+        x = X_list(i);
+        DIR= sprintf('%s=%f',var,x);
+        if ~isfolder(DIR)
+            errstr = sprintf('%s_list appears to be inconsistent: ',var);
+            errstr = [errstr,DIR]; %#ok
+            errstr = [errstr,' folder has not been found.']; %#ok
+            error(errstr);
         end
-        cd(UDIR);
+        cd(DIR);
         if(~isempty(suffix))
             filename = ['zeta_last_',suffix,'.ed'];
         else
             filename = 'zeta_last.ed';
         end
         if not(isfile(filename))
-            Z_list(iU) = NaN;
+            Z_list(i) = NaN;
         else
-            Z_list(iU) = load(filename);
+            Z_list(i) = load(filename);
         end
         cd('..');
     end
-    U_list = U_LIST;
     if(~isempty(suffix))
         filename = ['zeta_',suffix,'.txt'];
     else

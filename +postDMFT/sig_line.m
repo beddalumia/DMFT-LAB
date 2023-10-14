@@ -1,46 +1,49 @@
-function [S_list,U_list] = sig_line(suffix,U_LIST)
+function [S_list,X_list] = sig_line(var,suffix,X_list)
 %% Getting a list of scattering rate values, from directories. 
 %
-%       [S_list,U_list] = postDMFT.sig_line(suffix,U_LIST)
+%       [S_list,X_list] = postDMFT.sig_line(var,suffix,X_list)
 %
-%  S_list: a float-array, forall U, giving all the scattering rate values
-%  suffix: an optional charvec, handling inequivalent filename endings
-%  U_LIST: an optional array of values of Hubbard interaction: where to search
+%  var    : an optional char for the name of the line variable [default: 'U'] 
+%  suffix : an optional charvec, handling inequivalent filename endings
+%  S_list : a float-array, forall X, giving all the scattering rate values
+%  X_list : an optional array of values for the line variable: where to search
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if(~exist('suffix','var'))
-      suffix = [];
+    if(nargin<1)
+        var = 'U';
     end
-    if ~exist('U_LIST','var') || isempty(U_LIST)
-       [U_LIST, ~] = postDMFT.get_list('U'); 
+    if(nargin<2)
+        suffix = [];
+    end
+    if(nargin<3 || isempty(X_list))
+        [X_list, ~] = postDMFT.get_list(var); 
     else
-       U_LIST = sort(U_LIST);
+        X_list = sort(X_list);
     end
     % Then we can proceed spanning all the U-values
-    Nu = length(U_LIST);
-    S_list = zeros(Nu,1);
-    for iU = 1:length(U_LIST)
-        U = U_LIST(iU);
-        UDIR= sprintf('U=%f',U);
-        if ~isfolder(UDIR)
-           errstr = 'U_list appears to be inconsistent: ';
-           errstr = [errstr,UDIR];
-           errstr = [errstr,' folder has not been found.'];
-           error(errstr);
+    Nx = length(X_list);
+    S_list = zeros(Nx,1);
+    for i = 1:length(X_list)
+        x = X_list(i);
+        DIR= sprintf('%s=%f',var,x);
+        if ~isfolder(DIR)
+            errstr = sprintf('%s_list appears to be inconsistent: ',var);
+            errstr = [errstr,DIR]; %#ok
+            errstr = [errstr,' folder has not been found.']; %#ok
+            error(errstr);
         end
-        cd(UDIR);
+        cd(DIR);
         if(~isempty(suffix))
             filename = ['sig_last_',suffix,'.ed'];
         else
             filename = 'sig_last.ed';
         end
         if not(isfile(filename))
-            S_list(iU) = NaN;
+            S_list(i) = NaN;
         else
-            S_list(iU) = load(filename);
+            S_list(i) = load(filename);
         end
         cd('..');
     end
-    U_list = U_LIST;
     if(~isempty(suffix))
         filename = ['sig_',suffix,'.txt'];
     else

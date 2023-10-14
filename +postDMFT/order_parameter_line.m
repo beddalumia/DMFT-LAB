@@ -1,45 +1,48 @@
-function [ids,ordpms,U_list] = order_parameter_line(U_LIST)
+function [ids,ordpms,X_list] = order_parameter_line(var,X_list)
 %% Getting a list of order parameter values, from directories.
 %
-%       [ids,ordpms,U_list] = postDMFT.order_parameter_line(U_LIST)
+%       [ids,ordpms,X_list] = postDMFT.order_parameter_line(var,X_list)
 %
-%  ids: a cell of strings, the names of the order parameters 
-%  ordpms: a cell of arrays, corresponding to the names above, for all U
-%  U_LIST: an optional array of values of Hubbard interaction: where to search
+%  ids    : a cell of strings, the names of the order parameters 
+%  ordpms : a cell of arrays, corresponding to the names above, for all X
+%  var    : an optional char for the name of the line variable [default: 'U'] 
+%  X_list : an optional array of values for the line variable: where to search
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if ~exist('U_LIST','var') || isempty(U_LIST)
-    [U_LIST, ~] = postDMFT.get_list('U'); 
+    if(nargin<1)
+        var = 'U';
+    end
+    if(nargin<2 || isempty(X_list))
+        [X_list, ~] = postDMFT.get_list('U'); 
     else
-    U_LIST = sort(U_LIST);
+        X_list = sort(X_list);
     end
     % Then we can proceed spanning all the U-values
-    Nu = length(U_LIST);
-    cellordpms = cell(Nu,1);
-    for iU = 1:length(U_LIST)
-        U = U_LIST(iU);
-        UDIR= sprintf('U=%f',U);
-        if ~isfolder(UDIR)
-           errstr = 'U_list appears to be inconsistent: ';
-           errstr = [errstr,UDIR];
-           errstr = [errstr,' folder has not been found.'];
-           error(errstr);
+    Nx = length(X_list);
+    cellordpms = cell(Nx,1);
+    for i = 1:length(X_list)
+        x = X_list(i);
+        DIR= sprintf('%s=%f',var,x);
+        if ~isfolder(DIR)
+            errstr = sprintf('%s_list appears to be inconsistent: ',var);
+            errstr = [errstr,DIR]; %#ok
+            errstr = [errstr,' folder has not been found.']; %#ok
+            error(errstr);
         end
-        cd(UDIR); 
-        [ids, cellordpms{iU}] = postDMFT.get_order_parameters();
+        cd(DIR); 
+        [ids, cellordpms{i}] = postDMFT.get_order_parameters();
         cd('..');
     end
     % We need some proper reshaping
     Nordpms = length(ids);
     ordpms = cell(1,Nordpms);
     for jORDPMS = 1:Nordpms
-        ordpms{jORDPMS} = zeros(Nu,1);
-        for iU = 1:Nu
-           ordpms{jORDPMS}(iU) = cellordpms{iU}(jORDPMS);
+        ordpms{jORDPMS} = zeros(Nx,1);
+        for i = 1:Nx
+           ordpms{jORDPMS}(i) = cellordpms{i}(jORDPMS);
         end
         filename = [ids{jORDPMS},'.txt'];
         postDMFT.writematrix(ordpms{jORDPMS},filename,'Delimiter','tab');
     end
-    U_list = U_LIST;
 end
 
 
