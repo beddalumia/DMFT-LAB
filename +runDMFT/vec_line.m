@@ -17,7 +17,7 @@ if nargin < 1
 end
 
 %% Handle default value for var
-if nargin < 7
+if nargin < 4
    var = 'U';
 end
 
