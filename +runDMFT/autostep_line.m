@@ -1,13 +1,14 @@
-function autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
-%% Runs a U-line with feedback-controlled steps: 
-%  if dmft does not converge the point is discarded and Ustep is reduced.
+function autostep_line(EXE,doMPI,old,start,stop,var,varargin)
+%% Runs a $(var)-line with feedback-controlled steps: 
+%  if dmft does not converge the point is discarded and the step is reduced.
 %
 %   runDMFT.autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI
-%   Uold                : Restart point [NaN or empty -> no restart]
-%   Ustart,Ustop        : Input Hubbard interaction [Ustart<U<Ustop or Ustart>U>Ustop]
+%   old                 : Restart point [NaN or empty -> no restart]
+%   start,stop          : Input values for $(var) [start<x<stop or start>x>stop]
+%   var                 : Main variable of the line [default: 'U']
 %   varargin            : Set of fixed control parameters ['name',value]
 
 %% Print docstring if no input is provided
@@ -16,40 +17,40 @@ if nargin < 1
    return
 end
 
-Ulist = fopen('U_list.txt','a');
-Uconv = fopen('U_conv.txt','a');
+xlist = fopen(sprintf('%s_list.txt',var),'a');
+xconv = fopen(sprintf('%s_conv.txt',var),'a');
 
 %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Ustep = [.5,.25,.1,.05,.01];       % Let's keep them hard-coded... for now.
-NUstep = length(Ustep);
+step = [.5,.25,.1,.05,.01,.005,.001];  % Let's keep them hard-coded... for now.
+Nstep = length(step);
 
 % Autodetermine span direction
-if Ustart > Ustop
-   Ustep = -Ustep;
+if start > stop
+   step = -step;
 end
 
 nonconvFLG = false;                % Convergence-fail *flag*
 nonconvCNT = 0;                    % Convergence-fail *counter*
-nonconvMAX = NUstep-1;             % Maximum #{times} we accept DMFT to fail
+nonconvMAX = Nstep-1;              % Maximum #{times} we accept DMFT to fail
 
-U = Ustart; 
-while abs(U-Ustep-Ustop) > min(abs(Ustep)/2)
+x = start; 
+while abs(x-step-stop) > min(abs(step)/2)
 %                  ≥ 0 would sometimes give precision problems
 
-    unconverged = runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
+    unconverged = runDMFT.single_point(EXE,doMPI,var,x,old,varargin{:});
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
     if (unconverged) 
         nonconvFLG = true;
         nonconvCNT = nonconvCNT + 1;
-        errorfile = [sprintf('U=%f',U),'/ERROR.README'];
-        movefile(errorfile,sprintf('ERROR_U=%f',U));
-        fprintf(Ulist,'%f\n', NaN);             % Write on U-list
+        errorfile = [sprintf('%s=%f',var,x),'/ERROR.README'];
+        movefile(errorfile,sprintf('ERROR_%s=%f',var,x));
+        fprintf(xlist,'%f\n', NaN);             % Write on $(var)_list
     else
-        fprintf(Ulist,'%f\n', U);	            % Write on U-list
-        fprintf(Uconv,'%f\n', U);	            % Write on U-conv
+        fprintf(xlist,'%f\n', x);	            % Write on $(var)-list
+        fprintf(xconv,'%f\n', x);	            % Write on $(var)-conv
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -58,19 +59,19 @@ while abs(U-Ustep-Ustop) > min(abs(Ustep)/2)
     end 
 
     if nonconvFLG == true
-        U = Uold; 			        % if nonconverged we don't want to update 
+        x = old; 			        % if nonconverged we don't want to update 
         nonconvFLG = false;	        % > but we want to reset the flag(!)
     else
-        Uold = U; 			        % else we update Uold and proceed to...         
+        old = x; 			        % else we update old and proceed to...         
     end
 
-    U = U + Ustep(nonconvCNT+1);    % ...Hubbard update  
+    x = x + step(nonconvCNT+1);     % ...update the line variable 
 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fclose(Ulist); fclose(Uconv);
+fclose(xlist); fclose(xconv);
 
 end
 

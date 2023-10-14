@@ -1,12 +1,13 @@
-function autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
-%% Runs a U-line with most basic feedback: it stops when does not converge
+function autostop_line(EXE,doMPI,old,values,var,varargin)
+%% Runs a $(var)-line with most basic feedback: it stops when does not converge
 %
-%   runDMFT.autostop_line(EXE,doMPI,Uold,Ustart,Ustep,Ustop,varargin)
+%   runDMFT.autostop_line(EXE,doMPI,old,values,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI
-%   Uold                : Restart point [NaN or empty -> no restart]
-%   Ustart,Ustep,Ustop  : Input Hubbard interaction [Ustart:Ustep:Ustop]
+%   old                 : Restart point [NaN or empty -> no restart]
+%   values              : Input values for $(var) [a generic array]
+%   var                 : Main variable of the line [default: 'U']
 %   varargin            : Set of fixed control parameters ['name',value]
 
 %% Print docstring if no input is provided
@@ -15,42 +16,41 @@ if nargin < 1
    return
 end
 
-if sign(Ustop-Ustart) ~= sign(Ustep)
-   Ustep = -Ustep;
-   warning('Changed sign to Ustep to avoid infinite loops!');
+%% Handle default value for var
+if nargin < 4
+   var = 'U';
 end
 
-Ulist = fopen('U_list.txt','a');
-Uconv = fopen('U_conv.txt','a');
+xlist = fopen(sprintf('%s_list.txt',var),'a');
+xconv = fopen(sprintf('%s_conv.txt',var),'a');
 
 %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-U = Ustart; 
-while abs(U-Ustep-Ustop) > abs(Ustep)/2
-%                  ≥ 0 would sometimes give precision problems
+for i = 1:length(values)
 
-    unconverged = runDMFT.single_point(EXE,doMPI,U,Uold,varargin{:});
+   x = values(i); 
+   if i > 1
+      old = values(i-1);   % update the restarting point
+   end
+   unconverged = runDMFT.single_point(EXE,doMPI,var,x,old,varargin{:});
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
-    if (unconverged)
-        fprintf(Uconv,'%f\n',NaN); 
-        fclose(Ulist); % U-list stops here
-        error('Not converged: phase-span stops now!')
-    end
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   %% HERE WE CATCH A FAILED (unconverged) DMFT LOOP
+   if (unconverged)
+      fprintf(xlist,'%f\n', NaN); % Update xlist with a null value 
+      fclose(xlist);              % xlist stops here
+      error('Not converged: phase-span stops now!')
+   end
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    fprintf(Uconv,'%f\n', U);    % Write on U-conv
-    fprintf(Ulist,'%f\n', U);    % Write on U-list
-
-    Uold = U;
-    U = U + Ustep;               % Hubbard update  
+   fprintf(xlist,'%f\n', x);   % Update xlist with actual value
+   fprintf(xconv,'%f\n', x);   % Update xconv only if converged
 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fclose(Ulist); fclose(Uconv);
+fclose(xlist); fclose(xconv);
 
 end
 

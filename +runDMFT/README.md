@@ -14,7 +14,7 @@ Running QcmPlab DMFT codes from MATLAB
 
 - `autostop_line()` Basic linspace in U, without any adaptive feedback mechanism. Just stops the moment dmft does not converge (to avoid wasting cpu-time).
 
-- `autostep_line()` Gradually increases U by feedback-controlled steps, i.e. if dmft does not converge the point is discarded and the step reduced. Self-mixing is fixed (as every other control variable).
+- `autostep_line()` Gradually increases U by feedback-controlled steps, i.e. if dmft does not converge the point is discarded and the step reduced.
 
 
 #### Refinement
@@ -38,7 +38,7 @@ Running QcmPlab DMFT codes from MATLAB
 
 - [ ] `autostep_array()` A variant of `autostep_line()` that exploits the array-env-variables provided by `SLURM` on HPC facilities.
 
-- [ ] `autosampling_line` A replacement to `autostep_line()` (which would enter a deprecation cycle), aimed at controlling the step by inspecting the number of loops.
+- [ ] `autosampling_line` A replacement to `autostep_line()` (which would enter a deprecation cycle), aimed at controlling the step by inspecting the evolution of the number of loops.
 
 ### NOT-TODO
 
