@@ -31,7 +31,7 @@ xconv = fopen(sprintf('%s_conv.txt',var),'a');
 
 %% Phase-Line: single loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-values = start:step:stop
+values = start:step:stop;
 
 for i = 1:length(values)
    
