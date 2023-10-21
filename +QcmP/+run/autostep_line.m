@@ -2,7 +2,7 @@ function autostep_line(EXE,doMPI,old,start,stop,var,varargin)
 %% Runs a $(var)-line with feedback-controlled steps: 
 %  if dmft does not converge the point is discarded and the step is reduced.
 %
-%   QcmP.run.autostep_line(EXE,doMPI,Uold,Ustart,Ustop,varargin)
+%   QcmP.run.autostep_line(EXE,doMPI,old,start,stop,var,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI

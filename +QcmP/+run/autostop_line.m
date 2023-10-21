@@ -1,7 +1,7 @@
 function autostop_line(EXE,doMPI,old,values,var,varargin)
 %% Runs a $(var)-line with most basic feedback: it stops when does not converge
 %
-%   QcmP.run.autostop_line(EXE,doMPI,old,values,varargin)
+%   QcmP.run.autostop_line(EXE,doMPI,old,values,var,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI

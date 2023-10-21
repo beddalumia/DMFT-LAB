@@ -1,7 +1,7 @@
 function vec_line(EXE,doMPI,old,values,var,varargin)
 %% Runs a $(var)-line with no other convergence control than writing $(var)_conv.txt
 %
-%   QcmP.run.dry_line(EXE,doMPI,old,values,varargin)
+%   QcmP.run.dry_line(EXE,doMPI,old,values,var,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI

@@ -21,28 +21,33 @@ if nargin < 1
    return
 end
 
+if nargin < 5 
+   old = [];                  % no restart directory
+end
+
 DIR=sprintf('%s=%f',var,new); % Make a folder named 'var=...', where '...'
 mkdir(DIR);                   % is the given value for MAINVAR interaction
 
-if(~exist('old','var'))
-   old = [];                  % no restart directory, so...
-   copyfile('input*',DIR);    % copy inside the **external** input file
+if isempty(old) || isnan(old)
+   try
+      copyfile('input*',DIR); % copy inside the **external** input file
+   catch
+      system(EXE)             % let the driver generate the input file
+      trim_input_name(pwd);   % if missing, then trim the 'used' prefix
+      copyfile('input*',DIR); % and finally retry.
+   end
 end
 
-oldDIR=sprintf('%s=%f',var,old);      % ------------------------------------
+oldDIR=sprintf('%s=%f',var,old);      % -----------------------------------
 if isfolder(oldDIR)                   % If it exist a "previous" folder: 
 restartpack = [oldDIR,'/*.restart'];  % Copy all the restart files from the
 copyfile(restartpack,DIR);            % last dmft evaluation... and also
-copyfile([oldDIR,'/used.*'],DIR);     % copy the used input file, so to 
-usedinput  = dir([DIR, '/used.*']);   % avoid silly errors when adding point
-parts = strsplit(usedinput.name,'.'); % in between an existing line.
-newname = cell2mat(join(parts(2:end),'.'));
-oldpath = fullfile(DIR,usedinput.name);
-newpath = fullfile(DIR,newname);
-copyfile(oldpath,newpath);
-else                                  % Else raise an appropriate error, the
-error("Restart folder not found!")    % user should know there is no oldDIR.
-end                                   % ------------------------------------
+copyfile([oldDIR,'/used.*'],DIR);     % copy the used input file, suitably 
+trim_input_name(DIR);                 % renaming it to be ready-to-run.
+else                                  % Else raise a warning: the user
+warning("Restart folder not found!")  % should know there is no oldDIR.
+end                                   % -----------------------------------
+
 
 cd(DIR);                      % Enter the new-folder
 
@@ -83,4 +88,13 @@ end
 
 cd ..                           % Exit the $(var)-folder
 
+end
+
+function trim_input_name(here)
+    usedinput  = dir([here, '/used.*']);
+    parts = strsplit(usedinput.name,'.'); 
+    newname = cell2mat(join(parts(2:end),'.'));
+    oldpath = fullfile(here,usedinput.name);
+    newpath = fullfile(here,newname);
+    copyfile(oldpath,newpath);
 end

@@ -1,7 +1,7 @@
 function dry_line(EXE,doMPI,old,start,step,stop,var,varargin)
 %% Runs a $(var)-line with no other convergence control than writing $(var)_conv.txt
 %
-%   QcmP.run.dry_line(EXE,doMPI,old,start,step,stop,varargin)
+%   QcmP.run.dry_line(EXE,doMPI,old,start,step,stop,var,varargin)
 %
 %   EXE                 : Executable driver
 %   doMPI               : Flag to activate OpenMPI
