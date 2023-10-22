@@ -29,6 +29,9 @@ for i = 1:numel(usedpack)
     movefile(file, fullfile(folder, [name, extension]));
 end
 
+%% Reset the unconverged status
+delete('ERROR.README')
+
 %% Run FORTRAN code (already compiled and added to PATH!) %%%%%%%%%%%%%%%%%
 if doMPI
     mpi = 'mpirun ';                        % Control of MPI
