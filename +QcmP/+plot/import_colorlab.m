@@ -9,7 +9,7 @@ function import_colorlab()
 
     % Relative path building...
     path_to_plot = fileparts(mfilename('fullpath'));
-    path_to_repo = erase(path_to_plot,'+plotDMFT');
+    path_to_repo = erase(path_to_plot,'+QcmP/+plot');
     path_to_clab = [path_to_repo, 'lib/colorlab/'];
 
     % Add colorlab library folders to path
