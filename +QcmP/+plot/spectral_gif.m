@@ -11,7 +11,7 @@ function spectral_gif(filename,style,dt,list,var,varargin)
 %  varargin : additional options passed to QcmP.plot.spectral_frame()
 %  ------------------------------------------------------------------------
     if nargin < 1
-        help QcmP.plot.spectral_stack
+        help QcmP.plot.spectral_gif
         return
     end
     if nargin < 5
