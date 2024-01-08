@@ -1,12 +1,21 @@
-function [names, energies] = get_energies()
+function [names, energies] = get_energies(suffix)
 %% Getting all information from energy_last.ed and energy_info.ed
 %
-%       [names, energies] = QcmP.post.get_energies()
+%       [names, energies] = QcmP.post.get_energies(suffix)
 %
 %  names: a cell of strings, the QcmPlab names for the pot-energy terms
 %  energies: an array of float values, corresponding to the names above
+%  suffix: an optional charvec string, handling inequivalent filename endings
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    energies = load('energy_last.ed');
+    if(~exist('suffix','var'))
+        suffix = [];
+    end
+    if(~isempty(suffix))
+        filename = ['energy_last_',suffix,'.ed'];
+    else
+        filename = 'energy_last.ed';
+    end
+    energies = load(filename);
     try % MATLAB >= R2019a
         names = readcell('energy_info.ed','FileType','fixedwidth');
         names(strcmp(names,'#'))=[];

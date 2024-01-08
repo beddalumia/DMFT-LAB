@@ -1,17 +1,21 @@
-function [ids,ens,X_list]  = energy_line(var,X_list)
+function [ids,ens,X_list]  = energy_line(var,suffix,X_list)
 %% Getting a list of energy values, from directories.
 %
-%     [ids,ens,X_list]  = QcmP.post.energy_line(var,X_list)
+%     [ids,ens,X_list]  = QcmP.post.energy_line(var,suffix,X_list)
 %
 %  ids    : a cell of strings, the QcmPlab names for the pot-energy terms 
 %  ens    : a cell of float-arrays, corresponding to the names above, forall X
 %  var    : an optional char for the name of the line variable [default: 'U'] 
+%  suffix : an optional charvec, handling inequivalent filename endings
 %  X_list : an optional array of values for the line variable: where to search
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(nargin<1)
         var = 'U';
     end
-    if(nargin<2 || isempty(X_list))
+    if(nargin<2)
+        suffix = [];
+    end
+    if(nargin<3 || isempty(X_list))
         [X_list, ~] = QcmP.post.get_list(var); 
     else
         X_list = sort(X_list);
@@ -29,7 +33,7 @@ function [ids,ens,X_list]  = energy_line(var,X_list)
             error(errstr);
         end
         cd(DIR); 
-        [ids, cellEn{i}] = QcmP.post.get_energies();
+        [ids, cellEn{i}] = QcmP.post.get_energies(suffix);
         cd('..');
     end
     % We need some proper reshaping
@@ -40,7 +44,11 @@ function [ids,ens,X_list]  = energy_line(var,X_list)
         for i = 1:Nx
            ens{jEn}(i) = cellEn{i}(jEn);
         end
-        filename = [ids{jEn},'.txt'];
+        if(~isempty(suffix))
+            filename = [ids{jEn},'_',suffix,'.txt'];
+        else
+            filename = [ids{jEn},'.txt'];
+        end
         QcmP.post.writematrix(ens{jEn},filename,'Delimiter','tab');
     end
 end

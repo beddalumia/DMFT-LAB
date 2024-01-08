@@ -5,7 +5,7 @@ function [names, observables] = get_observables(suffix)
 %
 %  names: a cell of strings, the QcmPlab names of the observables
 %  observables: an array of float values, corresponding to the names above
-%  suffix: an charvec string, handling inequivalent filename endings
+%  suffix: an optional charvec string, handling inequivalent filename endings
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if(~exist('suffix','var'))
         suffix = [];
