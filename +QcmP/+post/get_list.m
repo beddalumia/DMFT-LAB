@@ -29,8 +29,8 @@ function [flist, strlist] = get_list(VARNAME)
       end
     end
     % Prune away all the NaNs
-    flist = flist(~isnan(flist));
     strlist = strlist(~isnan(flist));
+    flist = flist(~isnan(flist));
     % We need to sort the lists by floats (not strings, as it is now)
     [flist, sortedIDX] = sort(flist); strlist = strlist(sortedIDX);
 end
